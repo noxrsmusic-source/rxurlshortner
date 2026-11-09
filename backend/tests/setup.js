@@ -1,0 +1,9 @@
+process.env.FIRESTORE_EMULATOR_HOST = process.env.FIRESTORE_EMULATOR_HOST || 'localhost:8080';
+process.env.FIREBASE_AUTH_EMULATOR_HOST = process.env.FIREBASE_AUTH_EMULATOR_HOST || 'localhost:9099';
+process.env.GCLOUD_PROJECT = 'test-project';
+process.env.FIREBASE_PROJECT_ID = 'test-project';
+process.env.FIREBASE_CLIENT_EMAIL = 'test@test.com';
+process.env.FIREBASE_PRIVATE_KEY = 'unused';
+process.env.SESSION_SECRET = 'x'.repeat(64);
+process.env.IP_HASH_SECRET = 'y'.repeat(64);
+process.env.NODE_ENV = 'test';
