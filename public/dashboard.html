@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — RX URL Shorter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = { theme: { extend: {
+      fontFamily: { sans: ['Inter','sans-serif'] },
+      colors: { brand: { 50:'#EFF6FF',100:'#DBEAFE',200:'#BFDBFE',300:'#93C5FD',400:'#60A5FA',500:'#3B82F6',600:'#2563EB',700:'#1D4ED8',800:'#1E40AF',900:'#1E3A8A',950:'#172554' } },
+      boxShadow: { soft:'0 4px 24px -6px rgba(15,23,42,0.08)', card:'0 1px 2px 0 rgba(15,23,42,0.04), 0 1px 3px 0 rgba(15,23,42,0.06)' }
+    }}};
+  </script>
+  <style>
+    html{scroll-behavior:smooth}body{font-family:'Inter',sans-serif}
+    .modal-blur{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+    .no-scroll{overflow:hidden}
+    .fade-in{animation:fadeIn .25s ease-out}@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    .spin{animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+    .modal-scroll::-webkit-scrollbar{width:6px}.modal-scroll::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:3px}
+    .slide-in{animation:slideIn .25s ease-out}@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+    .slide-out{animation:slideOut .2s ease-in forwards}@keyframes slideOut{from{transform:translateX(0)}to{transform:translateX(100%)}}
+    .tab-active{background:#EFF6FF;color:#1D4ED8}
+    .toast-in{animation:toastIn .25s ease-out}@keyframes toastIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    .dash-section{display:none;animation:sectionIn .35s ease-out}
+    .dash-section.active{display:block}
+    @keyframes sectionIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .skeleton{background:linear-gradient(90deg,#f1f5f9 25%,#e2e8f0 50%,#f1f5f9 75%);background-size:200% 100%;animation:sk 1.5s infinite;border-radius:6px}
+    @keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased min-h-screen">
+
+  <div id="pageLoading" class="fixed inset-0 z-[100] bg-white flex items-center justify-center">
+    <div class="text-center">
+      <svg class="spin inline-block mb-3" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+      <p class="text-[13px] text-slate-500">Loading your dashboard…</p>
+    </div>
+  </div>
+
+  <header class="sticky top-0 z-40 bg-white border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-5 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="/" class="flex items-center gap-2 font-bold text-[15px] text-slate-900 shrink-0">
+          <span class="inline-flex items-center justify-center w-7 h-7 rounded-md bg-brand-600"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+          <span>RX URL Shorter</span>
+        </a>
+        <nav id="desktopNav" class="hidden lg:flex items-center gap-1 text-[13.5px] font-medium">
+          <button data-section="overview" class="nav-btn px-3 py-2 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-50">Overview</button>
+          <button data-section="create" class="nav-btn px-3 py-2 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-50">Create Link</button>
+          <button data-section="mylinks" class="nav-btn px-3 py-2 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-50">My Links</button>
+          <button data-section="earnings" class="nav-btn px-3 py-2 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-50">Earnings</button>
+          <button data-section="payouts" class="nav-btn px-3 py-2 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-50">Payouts</button>
+          <button data-section="referral" class="nav-btn px-3 py-2 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-50">Referral</button>
+        </nav>
+        <div class="flex items-center gap-2.5">
+          <div class="relative hidden lg:block">
+            <button id="userBtn" class="flex items-center gap-2.5 hover:bg-slate-50 rounded-lg p-1 pr-2">
+              <img id="userAvatar" class="w-8 h-8 rounded-full ring-2 ring-slate-200" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'%3E%3Cpath d='M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5z'/%3E%3C/svg%3E" alt="">
+              <div class="text-left leading-tight hidden xl:block">
+                <p id="hdrName" class="text-[12.5px] font-semibold text-slate-800 max-w-[120px] truncate">—</p>
+                <p id="hdrEmail" class="text-[11px] text-slate-400 max-w-[140px] truncate">—</p>
+              </div>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+            <div id="userDropdown" class="hidden absolute right-0 mt-2 w-60 bg-white rounded-lg shadow-lg ring-1 ring-slate-200 py-1.5 fade-in">
+              <a href="/" class="flex items-center gap-2 px-3.5 py-2 text-[13px] text-slate-700 hover:bg-slate-50">← Back to Home</a>
+              <button class="open-terms w-full flex items-center gap-2 px-3.5 py-2 text-[13px] text-slate-700 hover:bg-slate-50 text-left">Terms of Service</button>
+              <button class="open-privacy w-full flex items-center gap-2 px-3.5 py-2 text-[13px] text-slate-700 hover:bg-slate-50 text-left">Privacy Policy</button>
+              <div class="my-1 border-t border-slate-100"></div>
+              <button id="signOutBtn" class="w-full flex items-center gap-2 px-3.5 py-2 text-[13px] text-red-600 hover:bg-red-50 text-left">Sign Out</button>
+            </div>
+          </div>
+          <button id="hamburgerBtn" class="lg:hidden inline-flex items-center justify-center w-10 h-10 rounded-md text-slate-600 hover:bg-slate-100"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <div id="mobileMenu" class="hidden lg:hidden fixed inset-0 top-16 z-50 bg-slate-900/40" style="height:calc(100vh - 4rem);">
+      <div class="absolute right-0 top-0 h-full w-[85%] max-w-sm bg-white shadow-2xl slide-in overflow-y-auto modal-scroll">
+        <div class="p-5">
+          <div class="mb-5 p-4 rounded-xl bg-slate-50 ring-1 ring-slate-200">
+            <p id="mobName" class="text-[14px] font-semibold text-slate-900 truncate">—</p>
+            <p id="mobEmail" class="text-[12px] text-slate-500 truncate">—</p>
+            <div class="mt-3 pt-3 border-t border-slate-200 flex items-center justify-between text-[11.5px]">
+              <span class="text-slate-500">Balance</span>
+              <span id="mobBalance" class="font-bold text-emerald-600">$0.00</span>
+            </div>
+          </div>
+          <nav class="flex flex-col gap-0.5">
+            <button data-section="overview" class="nav-btn-mobile px-3 py-3 rounded-lg text-[14.5px] font-medium text-slate-700 hover:bg-slate-50 text-left">Overview</button>
+            <button data-section="create" class="nav-btn-mobile px-3 py-3 rounded-lg text-[14.5px] font-medium text-slate-700 hover:bg-slate-50 text-left">Create Link</button>
+            <button data-section="mylinks" class="nav-btn-mobile px-3 py-3 rounded-lg text-[14.5px] font-medium text-slate-700 hover:bg-slate-50 text-left">My Links</button>
+            <button data-section="earnings" class="nav-btn-mobile px-3 py-3 rounded-lg text-[14.5px] font-medium text-slate-700 hover:bg-slate-50 text-left">Earnings</button>
+            <button data-section="payouts" class="nav-btn-mobile px-3 py-3 rounded-lg text-[14.5px] font-medium text-slate-700 hover:bg-slate-50 text-left">Payouts</button>
+            <button data-section="referral" class="nav-btn-mobile px-3 py-3 rounded-lg text-[14.5px] font-medium text-slate-700 hover:bg-slate-50 text-left">Referral</button>
+          </nav>
+          <div class="my-4 h-px bg-slate-100"></div>
+          <button class="mobile-signout w-full mt-3 px-3 py-2.5 rounded-lg text-[13.5px] font-medium text-red-600 hover:bg-red-50">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-5 lg:px-8 py-6 sm:py-8 space-y-6">
+
+    <!-- Overview -->
+    <section id="section-overview" class="dash-section active">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <p class="text-[13px] text-slate-500 font-medium">Welcome back,</p>
+          <h1 id="greeting" class="text-2xl lg:text-3xl font-extrabold tracking-tight text-slate-900 mt-1">—</h1>
+          <p class="mt-1.5 text-[14px] text-slate-500">Here's a snapshot of your links and earnings.</p>
+        </div>
+        <div class="flex items-center gap-2.5">
+          <button data-section="create" class="nav-btn text-[13.5px] font-semibold px-4 py-2.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white inline-flex items-center gap-2">+ New Link</button>
+        </div>
+      </div>
+      <div class="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div class="bg-white rounded-xl p-4 sm:p-5 ring-1 ring-slate-200 shadow-card">
+          <p class="text-[11.5px] font-semibold uppercase tracking-wide text-slate-500">Total Links</p>
+          <div id="ovTotalLinks" class="mt-3 text-[22px] sm:text-[26px] font-extrabold text-slate-900">—</div>
+          <p class="mt-1.5 text-[12px] text-slate-400" id="ovActiveLinks">—</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 sm:p-5 ring-1 ring-slate-200 shadow-card">
+          <p class="text-[11.5px] font-semibold uppercase tracking-wide text-slate-500">Valid Clicks</p>
+          <div id="ovClicks" class="mt-3 text-[22px] sm:text-[26px] font-extrabold text-slate-900">—</div>
+          <p class="mt-1.5 text-[12px] text-slate-400">All-time</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 sm:p-5 ring-1 ring-slate-200 shadow-card">
+          <p class="text-[11.5px] font-semibold uppercase tracking-wide text-slate-500">Available Balance</p>
+          <div id="ovAvailable" class="mt-3 text-[22px] sm:text-[26px] font-extrabold text-emerald-600">—</div>
+          <p class="mt-1.5 text-[12px] text-slate-400">Ready to withdraw</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 sm:p-5 ring-1 ring-slate-200 shadow-card">
+          <p class="text-[11.5px] font-semibold uppercase tracking-wide text-slate-500">Pending</p>
+          <div id="ovPending" class="mt-3 text-[22px] sm:text-[26px] font-extrabold text-slate-900">—</div>
+          <p class="mt-1.5 text-[12px] text-slate-400">Awaiting confirmation</p>
+        </div>
+      </div>
+      <div class="mt-6 grid md:grid-cols-3 gap-3 sm:gap-4">
+        <button data-section="create" class="nav-btn text-left bg-white rounded-xl ring-1 ring-slate-200 p-5 hover:shadow-soft"><p class="text-[14px] font-bold text-slate-900">Create Link</p><p class="text-[12.5px] text-slate-500 mt-0.5">Shorten a new URL</p></button>
+        <button data-section="mylinks" class="nav-btn text-left bg-white rounded-xl ring-1 ring-slate-200 p-5 hover:shadow-soft"><p class="text-[14px] font-bold text-slate-900">My Links</p><p class="text-[12.5px] text-slate-500 mt-0.5">Manage & change flows</p></button>
+        <button data-section="payouts" class="nav-btn text-left bg-white rounded-xl ring-1 ring-slate-200 p-5 hover:shadow-soft"><p class="text-[14px] font-bold text-slate-900">Request Payout</p><p class="text-[12.5px] text-slate-500 mt-0.5">Withdraw your balance</p></button>
+      </div>
+    </section>
+
+    <!-- Create Link -->
+    <section id="section-create" class="dash-section">
+      <div class="bg-white rounded-xl ring-1 ring-slate-200 shadow-card p-5 sm:p-6">
+        <h2 class="text-[17px] sm:text-[18px] font-bold text-slate-900">Create a Short Link</h2>
+        <p class="mt-1 text-[13.5px] text-slate-500">Paste a URL, choose an ad flow (1–4 pages), and get paid per completed journey.</p>
+        <form id="shortenForm" class="mt-5 space-y-4">
+          <div class="relative">
+            <input id="longUrl" type="url" required placeholder="https://example.com/your-long-url" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:border-brand-500 outline-none text-[14px]" />
+          </div>
+          <div class="grid sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-[12.5px] font-semibold text-slate-700 mb-1.5">Link title (optional)</label>
+              <input id="linkTitle" type="text" maxlength="200" placeholder="e.g. My YouTube video" class="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 outline-none text-[14px]" />
+            </div>
+            <div>
+              <label class="block text-[12.5px] font-semibold text-slate-700 mb-1.5">Ad flow (pages)</label>
+              <select id="flowSelect" class="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 outline-none text-[14px] bg-white">
+                <option value="1">1 page</option><option value="2" selected>2 pages</option>
+                <option value="3">3 pages</option><option value="4">4 pages</option>
+              </select>
+            </div>
+          </div>
+          <div id="flowDisabledNotice" class="hidden text-[12.5px] px-3 py-2 rounded-md bg-amber-50 text-amber-800 ring-1 ring-amber-200">Some flows are currently disabled by admin.</div>
+          <button type="submit" id="shortenBtn" class="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-[14px] px-6 py-3 rounded-lg">
+            <span id="shortenBtnText">Create Short Link</span>
+            <svg id="shortenSpinner" class="hidden spin" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+          </button>
+        </form>
+        <div id="shortenResult" class="hidden mt-4 rounded-lg ring-1 ring-emerald-200 bg-emerald-50/60 p-4">
+          <p class="text-[13px] font-semibold text-emerald-800">Short link ready</p>
+          <div class="mt-2 flex items-center gap-2 flex-wrap">
+            <input id="shortLinkOutput" type="text" readonly class="flex-1 min-w-[200px] px-3 py-2 rounded-lg border border-emerald-200 bg-white text-[13.5px] font-medium text-slate-800" />
+            <button id="copyShortBtn" type="button" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-[12.5px] px-4 py-2 rounded-lg">Copy</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- My Links -->
+    <section id="section-mylinks" class="dash-section">
+      <div class="bg-white rounded-xl ring-1 ring-slate-200 shadow-card overflow-hidden">
+        <div class="p-5 border-b border-slate-200">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h2 class="text-[17px] sm:text-[18px] font-bold text-slate-900">My Links</h2>
+              <p class="mt-1 text-[13.5px] text-slate-500">Change a link's ad flow any time — the short URL never changes.</p>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <input id="linksSearch" type="text" placeholder="Search title or URL…" class="px-3 py-2 rounded-lg border border-slate-200 outline-none text-[13px] w-56" />
+              <select id="linksFilter" class="px-3 py-2 rounded-lg border border-slate-200 outline-none text-[13px] bg-white"><option value="">All statuses</option><option value="active">Active</option><option value="paused">Paused</option><option value="deleted">Deleted</option></select>
+            </div>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left min-w-[860px]">
+            <thead class="bg-slate-50 border-b border-slate-200">
+              <tr>
+                <th class="px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-slate-500">Link</th>
+                <th class="px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-slate-500">Flow</th>
+                <th class="px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-right">Clicks</th>
+                <th class="px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-slate-500">Status</th>
+                <th class="px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-slate-500">Created</th>
+                <th class="px-4 py-3 text-[11px] font-bold uppercase tracking-wider text-slate-500 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="linksTbody" class="divide-y divide-slate-100">
+              <tr><td colspan="6" class="px-5 py-10 text-center text-[13px] text-slate-400">Loading links…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Earnings -->
+    <section id="section-earnings" class="dash-section">
+      <div class="bg-white rounded-xl ring-1 ring-slate-200 shadow-card">
+        <div class="p-5 border-b border-slate-200">
+          <h2 class="text-[17px] sm:text-[18px] font-bold text-slate-900">Earnings</h2>
+          <p class="mt-1 text-[13.5px] text-slate-500">Per-click breakdown. Amounts are estimated from real ad traffic — see the ledger for the audit trail.</p>
+        </div>
+        <div class="p-5 grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="rounded-lg ring-1 ring-slate-200 p-3.5"><p class="text-[11px] uppercase font-semibold tracking-wide text-slate-500">Available</p><p id="ernAvail" class="mt-1.5 text-[20px] font-extrabold text-emerald-600">—</p></div>
+          <div class="rounded-lg ring-1 ring-slate-200 p-3.5"><p class="text-[11px] uppercase font-semibold tracking-wide text-slate-500">Pending</p><p id="ernPending" class="mt-1.5 text-[20px] font-extrabold text-slate-900">—</p></div>
+          <div class="rounded-lg ring-1 ring-slate-200 p-3.5"><p class="text-[11px] uppercase font-semibold tracking-wide text-slate-500">Withdrawn</p><p id="ernWithdrawn" class="mt-1.5 text-[20px] font-extrabold text-slate-900">—</p></div>
+          <div class="rounded-lg ring-1 ring-slate-200 p-3.5"><p class="text-[11px] uppercase font-semibold tracking-wide text-slate-500">Currency</p><p id="ernCurrency" class="mt-1.5 text-[20px] font-extrabold text-slate-900">USD</p></div>
+        </div>
+        <div class="px-5 pb-5">
+          <h3 class="text-[14px] font-bold text-slate-900 mb-2">Recent earnings</h3>
+          <div class="overflow-hidden rounded-lg ring-1 ring-slate-200">
+            <table class="w-full text-left min-w-[520px]">
+              <thead class="bg-slate-50 border-b border-slate-200"><tr><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Date</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Source</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Status</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500 text-right">Amount</th></tr></thead>
+              <tbody id="earningsTbody" class="divide-y divide-slate-100"><tr><td colspan="4" class="px-4 py-8 text-center text-[13px] text-slate-400">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Payouts -->
+    <section id="section-payouts" class="dash-section">
+      <div class="grid lg:grid-cols-3 gap-4">
+        <div class="lg:col-span-2 bg-white rounded-xl ring-1 ring-slate-200 shadow-card p-5 sm:p-6">
+          <h2 class="text-[17px] sm:text-[18px] font-bold text-slate-900">Payouts</h2>
+          <div class="mt-5 rounded-xl ring-1 ring-brand-200 bg-gradient-to-br from-brand-50 to-white p-5">
+            <div class="flex items-center justify-between flex-wrap gap-3">
+              <div>
+                <p class="text-[11.5px] uppercase font-bold text-brand-700">Available Balance</p>
+                <p id="payoutBalance" class="mt-1 text-[30px] font-extrabold text-slate-900">—</p>
+                <p id="payoutMin" class="text-[12.5px] text-slate-500 mt-1">Min. withdrawal $5.00</p>
+              </div>
+              <button id="openPayoutBtn" class="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-[13.5px] px-5 py-2.5 rounded-lg">Request Payment</button>
+            </div>
+          </div>
+          <div class="mt-6">
+            <h3 class="text-[14px] font-bold text-slate-900 mb-2">Payout History</h3>
+            <div class="overflow-hidden rounded-lg ring-1 ring-slate-200">
+              <table class="w-full text-left min-w-[480px]">
+                <thead class="bg-slate-50 border-b border-slate-200"><tr><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Date</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Method</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500 text-right">Amount</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500 text-right">Status</th></tr></thead>
+                <tbody id="payoutsTbody" class="divide-y divide-slate-100"><tr><td colspan="4" class="px-4 py-8 text-center text-[13px] text-slate-400">Loading…</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl ring-1 ring-slate-200 shadow-card p-5">
+          <h2 class="text-[15.5px] font-bold text-slate-900">Supported Methods</h2>
+          <div class="mt-4 space-y-2">
+            <div class="flex items-center gap-3 p-3 rounded-lg ring-1 ring-slate-200"><span class="w-9 h-9 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center font-bold text-[12px]">UPI</span><p class="text-[13px] font-semibold text-slate-800">UPI</p></div>
+            <div class="flex items-center gap-3 p-3 rounded-lg ring-1 ring-slate-200"><span class="w-9 h-9 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-[12px]">PP</span><p class="text-[13px] font-semibold text-slate-800">PayPal</p></div>
+            <div class="flex items-center gap-3 p-3 rounded-lg ring-1 ring-slate-200"><span class="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-[12px]">₮</span><p class="text-[13px] font-semibold text-slate-800">USDT (TRC-20)</p></div>
+            <div class="flex items-center gap-3 p-3 rounded-lg ring-1 ring-slate-200"><span class="w-9 h-9 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center text-[13px]">🏦</span><p class="text-[13px] font-semibold text-slate-800">Bank Transfer</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Referral -->
+    <section id="section-referral" class="dash-section">
+      <div class="bg-white rounded-xl ring-1 ring-slate-200 shadow-card p-5 sm:p-6">
+        <h2 class="text-[18px] sm:text-[20px] font-extrabold text-slate-900">Invite friends. Earn lifetime commission.</h2>
+        <p class="mt-1.5 text-[13.5px] text-slate-500">Share your referral link. You earn a percentage of everything your referrals ever earn — for life.</p>
+        <div class="mt-5 rounded-lg ring-1 ring-slate-200 bg-slate-50 p-4">
+          <p class="text-[12px] font-semibold text-slate-700 mb-2">Your referral link</p>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input id="referralLink" type="text" readonly class="flex-1 px-3 py-2.5 rounded-lg border border-slate-200 bg-white text-[13px]" />
+            <button id="copyReferralBtn" class="bg-brand-600 hover:bg-brand-700 text-white font-semibold text-[13px] px-5 py-2.5 rounded-lg whitespace-nowrap">Copy Link</button>
+          </div>
+          <p class="mt-2 text-[12px] text-slate-500">Total referrals: <span id="refTotal" class="font-semibold text-slate-800">—</span></p>
+        </div>
+        <div class="mt-5">
+          <h3 class="text-[14px] font-bold text-slate-900 mb-2">Referral commissions</h3>
+          <div class="overflow-hidden rounded-lg ring-1 ring-slate-200">
+            <table class="w-full text-left min-w-[440px]">
+              <thead class="bg-slate-50 border-b border-slate-200"><tr><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Date</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500 text-right">Commission</th></tr></thead>
+              <tbody id="refTbody" class="divide-y divide-slate-100"><tr><td colspan="2" class="px-4 py-8 text-center text-[13px] text-slate-400">Loading…</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modals -->
+  <div id="editFlowModal" class="hidden fixed inset-0 z-[110] items-center justify-center p-4 modal-blur bg-slate-900/60">
+    <div class="w-full max-w-[420px] bg-white rounded-2xl shadow-2xl fade-in">
+      <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between"><h2 class="text-[16px] font-extrabold text-slate-900">Edit Flow</h2><button id="closeEditFlow" class="w-8 h-8 rounded-full hover:bg-slate-100">✕</button></div>
+      <form id="editFlowForm" class="p-5 space-y-3">
+        <p id="editFlowLink" class="text-[12.5px] text-slate-500 break-all">—</p>
+        <div>
+          <label class="block text-[12.5px] font-semibold text-slate-700 mb-1.5">New flow</label>
+          <select id="editFlowSelect" class="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 outline-none text-[14px] bg-white"><option value="1">1 page</option><option value="2">2 pages</option><option value="3">3 pages</option><option value="4">4 pages</option></select>
+        </div>
+        <p class="text-[11.5px] text-slate-400">The short URL won't change. Existing visitor journeys keep their original flow.</p>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" id="cancelEditFlow" class="px-4 py-2.5 rounded-lg ring-1 ring-slate-200 text-slate-700 font-semibold text-[13px]">Cancel</button>
+          <button type="submit" class="px-5 py-2.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-semibold text-[13px]">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="payoutModal" class="hidden fixed inset-0 z-[110] items-center justify-center p-4 modal-blur bg-slate-900/60">
+    <div class="w-full max-w-[440px] bg-white rounded-2xl shadow-2xl fade-in">
+      <div class="px-5 py-4 border-b border-slate-200 flex items-center justify-between"><h2 class="text-[16px] font-extrabold text-slate-900">Request Payment</h2><button id="closePayout" class="w-8 h-8 rounded-full hover:bg-slate-100">✕</button></div>
+      <form id="payoutForm" class="p-5 space-y-4">
+        <div id="payoutAlert" class="hidden text-[13px] px-3.5 py-2.5 rounded-lg"></div>
+        <div>
+          <label class="block text-[12.5px] font-semibold text-slate-700 mb-1.5">Amount (USD)</label>
+          <input id="payoutAmount" type="number" min="0" step="0.01" required class="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 outline-none text-[14px]" />
+        </div>
+        <div>
+          <label class="block text-[12.5px] font-semibold text-slate-700 mb-1.5">Payment method</label>
+          <select id="payoutMethod" class="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 outline-none text-[14px] bg-white">
+            <option value="upi">UPI</option><option value="paypal">PayPal</option>
+            <option value="usdt">USDT (TRC-20)</option><option value="bank">Bank transfer</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-[12.5px] font-semibold text-slate-700 mb-1.5">Payment details</label>
+          <input id="payoutDetails" type="text" required placeholder="UPI ID / PayPal email / wallet address" class="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 outline-none text-[14px]" />
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" id="cancelPayout" class="px-4 py-2.5 rounded-lg ring-1 ring-slate-200 text-slate-700 font-semibold text-[13px]">Cancel</button>
+          <button type="submit" class="px-5 py-2.5 rounded-lg bg-brand-600 hover:bg-brand-700 text-white font-semibold text-[13px]">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="termsModal" class="hidden fixed inset-0 z-[120] items-center justify-center p-4 modal-blur bg-slate-900/60">
+    <div class="relative w-full max-w-[720px] max-h-[90vh] overflow-y-auto modal-scroll bg-white rounded-2xl shadow-2xl fade-in">
+      <div class="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between"><h2 class="text-[17px] font-extrabold">Terms of Service</h2><button class="close-legal w-8 h-8 rounded-full hover:bg-slate-100">✕</button></div>
+      <div class="p-6 text-[13px] text-slate-600 leading-relaxed space-y-3">
+        <p>By using RX URL Shorter you agree to these Terms. 99% profit share, 1% platform fee. Rates are estimates not fixed CPM. Payouts on demand above minimum. Self-referrals, self-clicks, VPN, and bot traffic are prohibited.</p>
+      </div>
+    </div>
+  </div>
+  <div id="privacyModal" class="hidden fixed inset-0 z-[120] items-center justify-center p-4 modal-blur bg-slate-900/60">
+    <div class="relative w-full max-w-[720px] max-h-[90vh] overflow-y-auto modal-scroll bg-white rounded-2xl shadow-2xl fade-in">
+      <div class="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between"><h2 class="text-[17px] font-extrabold">Privacy Policy</h2><button class="close-legal w-8 h-8 rounded-full hover:bg-slate-100">✕</button></div>
+      <div class="p-6 text-[13px] text-slate-600 leading-relaxed space-y-3">
+        <p>We collect account data, usage data, and process payments via third-party providers. We do not sell your data. Passwords are hashed; data is encrypted in transit.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] bg-slate-900 text-white text-[13px] font-medium px-4 py-2.5 rounded-lg shadow-lg toast-in"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="/js/firebase-config.js"></script>
+  <script src="/js/api.js"></script>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    firebase.initializeApp(window.firebaseConfig);
+    const auth = firebase.auth();
+
+    const state = { user: null, profile: null, links: [], settings: null };
+
+    // ── Auth guard ──
+    async function boot() {
+      auth.onAuthStateChanged(async (user) => {
+        if (!user) { window.location.replace('/'); return; }
+        state.user = user;
+        try {
+          let me;
+          try {
+            me = await API.get('/api/auth/me');
+          } catch (err) {
+            if (err.status === 403) {
+              await API.post('/api/auth/profile/init', { name: user.displayName || '' });
+              me = await API.get('/api/auth/me');
+            } else throw err;
+          }
+          state.profile = me.user;
+          if (state.profile.accountStatus === 'suspended') {
+            document.body.innerHTML = '<div class="min-h-screen flex items-center justify-center p-6"><div class="max-w-md text-center bg-white rounded-2xl ring-1 ring-red-200 p-8"><h1 class="text-[20px] font-extrabold text-red-700">Account Suspended</h1><p class="mt-2 text-[14px] text-slate-600">Contact support@rxurlshorter.com for assistance.</p></div></div>';
+            return;
+          }
+          $('hdrName').textContent = state.profile.name || user.email?.split('@')[0] || 'User';
+          $('hdrEmail').textContent = state.profile.email || user.email;
+          $('mobName').textContent = state.profile.name || 'User';
+          $('mobEmail').textContent = state.profile.email || user.email;
+          $('greeting').textContent = state.profile.name || 'User';
+          if (user.photoURL) $('userAvatar').src = user.photoURL;
+          $('pageLoading').classList.add('hidden');
+          await loadSettings();
+          await Promise.all([loadOverview(), loadEarnings(), loadWithdrawals(), loadReferrals()]);
+          await loadLinks();
+        } catch (err) {
+          console.error(err);
+          $('pageLoading').innerHTML = '<div class="text-center p-6"><p class="text-[14px] font-semibold text-red-600">Failed to load dashboard</p><p class="text-[12px] text-slate-500 mt-1">' + (err.message || '') + '</p></div>';
+        }
+      });
+    }
+    boot();
+
+    // ── Helpers ──
+    const microToDollars = (m) => ((m || 0) / 1_000_000);
+    const fmtMoney = (m) => '$' + microToDollars(m).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const fmtDate = (ts) => {
+      if (!ts) return '—';
+      const d = ts._seconds ? new Date(ts._seconds * 1000) : (ts.toDate ? ts.toDate() : new Date(ts));
+      return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    };
+    function showToast(msg) {
+      const t = $('toast'); t.textContent = msg; t.classList.remove('hidden');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => t.classList.add('hidden'), 2000);
+    }
+
+    // ── Tabs ──
+    const allSections = document.querySelectorAll('.dash-section');
+    const allNavBtns = document.querySelectorAll('.nav-btn, .nav-btn-mobile');
+    function showSection(id) {
+      allSections.forEach(s => s.classList.remove('active'));
+      const t = document.getElementById('section-' + id);
+      if (t) t.classList.add('active');
+      allNavBtns.forEach(b => b.classList.toggle('tab-active', b.dataset.section === id));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    allNavBtns.forEach(btn => btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const id = btn.dataset.section;
+      if (!id) return;
+      showSection(id);
+      closeMM();
+    }));
+    showSection('overview');
+
+    // ── Settings ──
+    async function loadSettings() {
+      try {
+        const res = await fetch('/api/public/settings');
+        const data = await res.json();
+        state.settings = data.settings || {};
+        const ef = state.settings.enabledFlows || { 1: true, 2: true, 3: true, 4: true };
+        const sel = $('flowSelect');
+        const firstEnabled = [1,2,3,4].find(n => ef[n]);
+        if (firstEnabled) sel.value = String(firstEnabled);
+        const anyDisabled = [1,2,3,4].some(n => !ef[n]);
+        $('flowDisabledNotice').classList.toggle('hidden', !anyDisabled);
+        sel.querySelectorAll('option').forEach(o => {
+          o.disabled = !ef[Number(o.value)];
+        });
+      } catch {}
+    }
+
+    // ── Overview ──
+    async function loadOverview() {
+      try {
+        const [linksRes, earnRes] = await Promise.all([API.get('/api/links'), API.get('/api/earnings/summary')]);
+        state.links = linksRes.links || [];
+        const active = state.links.filter(l => l.status === 'active').length;
+        const totalClicks = state.links.reduce((s,l) => s + (l.totalValidClicks || 0), 0);
+        $('ovTotalLinks').textContent = state.links.length;
+        $('ovActiveLinks').textContent = active + ' active';
+        $('ovClicks').textContent = totalClicks.toLocaleString();
+        $('ovAvailable').textContent = fmtMoney(earnRes.availableBalanceMicro);
+        $('ovPending').textContent = fmtMoney(earnRes.pendingBalanceMicro);
+        $('mobBalance').textContent = fmtMoney(earnRes.availableBalanceMicro);
+        $('ernAvail').textContent = fmtMoney(earnRes.availableBalanceMicro);
+        $('ernPending').textContent = fmtMoney(earnRes.pendingBalanceMicro);
+        $('ernWithdrawn').textContent = fmtMoney(earnRes.withdrawnMicro);
+        $('ernCurrency').textContent = earnRes.currency || 'USD';
+        $('payoutBalance').textContent = fmtMoney(earnRes.availableBalanceMicro);
+        const min = state.settings?.minWithdrawalMicro ?? 5_000_000;
+        $('payoutMin').textContent = 'Min. withdrawal ' + fmtMoney(min);
+      } catch (err) { console.error('overview', err); }
+    }
+
+    // ── Links ──
+    async function loadLinks() {
+      try {
+        const res = await API.get('/api/links');
+        state.links = res.links || [];
+        renderLinks();
+        // also refresh overview stats from the new list
+        const active = state.links.filter(l => l.status === 'active').length;
+        const totalClicks = state.links.reduce((s,l) => s + (l.totalValidClicks || 0), 0);
+        $('ovTotalLinks').textContent = state.links.length;
+        $('ovActiveLinks').textContent = active + ' active';
+        $('ovClicks').textContent = totalClicks.toLocaleString();
+      } catch (err) {
+        $('linksTbody').innerHTML = '<tr><td colspan="6" class="px-5 py-10 text-center text-[13px] text-red-600">Failed to load links.</td></tr>';
+      }
+    }
+
+    function renderLinks() {
+      const q = ($('linksSearch').value || '').toLowerCase().trim();
+      const status = $('linksFilter').value;
+      const filtered = state.links.filter(l => {
+        if (status && l.status !== status) return false;
+        if (q && !(String(l.title || '').toLowerCase().includes(q) || String(l.destinationUrl || '').toLowerCase().includes(q) || String(l.shortCode || '').toLowerCase().includes(q))) return false;
+        return true;
+      });
+      if (!filtered.length) {
+        $('linksTbody').innerHTML = '<tr><td colspan="6" class="px-5 py-10 text-center text-[13px] text-slate-400">No links yet. <button data-section="create" class="nav-btn text-brand-600 font-semibold">Create your first link →</button></td></tr>';
+        allNavBtns.forEach(b => b.addEventListener('click', () => {}));
+        return;
+      }
+      const base = window.location.origin;
+      $('linksTbody').innerHTML = filtered.map(l => {
+        const shortUrl = `${base}/${l.shortCode}`;
+        const badgeColor = l.status === 'active' ? 'bg-emerald-50 text-emerald-700 ring-emerald-200' : l.status === 'paused' ? 'bg-amber-50 text-amber-700 ring-amber-200' : 'bg-slate-100 text-slate-500 ring-slate-200';
+        return `<tr class="hover:bg-slate-50">
+          <td class="px-4 py-3 text-[13px]">
+            <p class="font-semibold text-slate-900 truncate max-w-[240px]">${escapeHtml(l.title || l.shortCode)}</p>
+            <p class="text-slate-500 truncate max-w-[240px]">${escapeHtml(l.destinationUrl)}</p>
+            <p class="text-[11.5px] text-brand-600 font-mono mt-0.5">${escapeHtml(shortUrl)}</p>
+          </td>
+          <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-[11.5px] font-semibold bg-brand-50 text-brand-700 ring-1 ring-brand-200">${l.flowPageCount} page${l.flowPageCount > 1 ? 's' : ''}</span></td>
+          <td class="px-4 py-3 text-[13px] font-semibold text-slate-900 text-right">${(l.totalValidClicks || 0).toLocaleString()}</td>
+          <td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold ring-1 ${badgeColor} capitalize">${l.status}</span></td>
+          <td class="px-4 py-3 text-[12.5px] text-slate-500">${fmtDate(l.createdAt)}</td>
+          <td class="px-4 py-3 text-right">
+            <button onclick="copyLink('${escapeHtml(shortUrl)}')" class="text-[12px] font-semibold text-slate-600 hover:text-slate-900 px-2 py-1 rounded hover:bg-slate-100">Copy</button>
+            <button onclick="openEditFlow('${l.linkId}', ${l.flowPageCount})" class="text-[12px] font-semibold text-brand-600 hover:text-brand-800 px-2 py-1 rounded hover:bg-brand-50">Edit Flow</button>
+            ${l.status === 'active' ? `<button onclick="setLinkStatus('${l.linkId}','paused')" class="text-[12px] font-semibold text-amber-600 hover:text-amber-800 px-2 py-1 rounded hover:bg-amber-50">Pause</button>` : ''}
+            ${l.status === 'paused' ? `<button onclick="setLinkStatus('${l.linkId}','active')" class="text-[12px] font-semibold text-emerald-600 hover:text-emerald-800 px-2 py-1 rounded hover:bg-emerald-50">Resume</button>` : ''}
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    function escapeHtml(s) {
+      return String(s || '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+    }
+
+    $('linksSearch').addEventListener('input', renderLinks);
+    $('linksFilter').addEventListener('change', renderLinks);
+
+    window.copyLink = async (url) => {
+      try { await navigator.clipboard.writeText(url); showToast('Link copied'); }
+      catch { showToast('Copy failed'); }
+    };
+
+    window.setLinkStatus = async (linkId, status) => {
+      try {
+        await API.patch(`/api/links/${linkId}/status`, { status });
+        showToast('Status updated');
+        await loadLinks();
+      } catch (e) { showToast(e.message || 'Failed'); }
+    };
+
+    // ── Edit Flow modal ──
+    let editingLinkId = null;
+    window.openEditFlow = (linkId, currentFlow) => {
+      editingLinkId = linkId;
+      $('editFlowLink').textContent = 'Link: ' + linkId.slice(0, 12) + '…';
+      $('editFlowSelect').value = String(currentFlow);
+      $('editFlowModal').classList.remove('hidden');
+      $('editFlowModal').classList.add('flex');
+    };
+    $('closeEditFlow').addEventListener('click', () => { $('editFlowModal').classList.add('hidden'); $('editFlowModal').classList.remove('flex'); });
+    $('cancelEditFlow').addEventListener('click', () => { $('editFlowModal').classList.add('hidden'); $('editFlowModal').classList.remove('flex'); });
+    $('editFlowModal').addEventListener('click', (e) => { if (e.target === $('editFlowModal')) { $('editFlowModal').classList.add('hidden'); $('editFlowModal').classList.remove('flex'); } });
+    $('editFlowForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!editingLinkId) return;
+      try {
+        await API.patch(`/api/links/${editingLinkId}/flow`, { flowPageCount: Number($('editFlowSelect').value) });
+        $('editFlowModal').classList.add('hidden'); $('editFlowModal').classList.remove('flex');
+        showToast('Flow updated — new visitors will use the new flow');
+        await loadLinks();
+      } catch (err) {
+        showToast(err.message || 'Failed to update flow');
+      }
+    });
+
+    // ── Create Link ──
+    $('shortenForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const url = $('longUrl').value.trim();
+      if (!url) return;
+      $('shortenBtn').disabled = true;
+      $('shortenBtnText').textContent = 'Creating…';
+      $('shortenSpinner').classList.remove('hidden');
+      try {
+        const res = await API.post('/api/links', {
+          destinationUrl: url,
+          title: $('linkTitle').value.trim(),
+          flowPageCount: Number($('flowSelect').value)
+        });
+        const shortUrl = window.location.origin + '/' + res.link.shortCode;
+        $('shortLinkOutput').value = shortUrl;
+        $('shortenResult').classList.remove('hidden');
+        $('longUrl').value = ''; $('linkTitle').value = '';
+        showToast('Short link created');
+        await loadLinks();
+      } catch (err) {
+        showToast(err.message || 'Failed to create link');
+      } finally {
+        $('shortenBtn').disabled = false;
+        $('shortenBtnText').textContent = 'Create Short Link';
+        $('shortenSpinner').classList.add('hidden');
+      }
+    });
+    $('copyShortBtn').addEventListener('click', () => copyLink($('shortLinkOutput').value));
+
+    // ── Earnings ──
+    async function loadEarnings() {
+      try {
+        const res = await API.get('/api/earnings/history');
+        const list = res.earnings || [];
+        if (!list.length) {
+          $('earningsTbody').innerHTML = '<tr><td colspan="4" class="px-4 py-8 text-center text-[13px] text-slate-400">No earnings yet. Share a link to get started.</td></tr>';
+          return;
+        }
+        $('earningsTbody').innerHTML = list.slice(0, 50).map(e => {
+          const statusColor = e.status === 'valid' || e.status === 'pending' ? 'bg-emerald-50 text-emerald-700 ring-emerald-200' : e.status === 'reversed' ? 'bg-red-50 text-red-700 ring-red-200' : 'bg-slate-100 text-slate-600 ring-slate-200';
+          return `<tr class="hover:bg-slate-50">
+            <td class="px-4 py-2.5 text-[12.5px] text-slate-600">${fmtDate(e.createdAt)}</td>
+            <td class="px-4 py-2.5 text-[12.5px] text-slate-600 capitalize">${escapeHtml(e.calculationSource || 'estimated')}</td>
+            <td class="px-4 py-2.5"><span class="inline-flex px-2 py-0.5 rounded-md text-[11px] font-semibold ring-1 ${statusColor} capitalize">${escapeHtml(e.status)}</span></td>
+            <td class="px-4 py-2.5 text-[13px] font-bold text-emerald-600 text-right">${fmtMoney(e.publisherAmountMicro)}</td>
+          </tr>`;
+        }).join('');
+      } catch (err) { console.error('earnings', err); }
+    }
+
+    // ── Withdrawals ──
+    async function loadWithdrawals() {
+      try {
+        const res = await API.get('/api/withdrawals');
+        const list = res.withdrawals || [];
+        if (!list.length) {
+          $('payoutsTbody').innerHTML = '<tr><td colspan="4" class="px-4 py-8 text-center text-[13px] text-slate-400">No payouts yet.</td></tr>';
+          return;
+        }
+        $('payoutsTbody').innerHTML = list.map(w => {
+          const sc = w.status === 'paid' ? 'bg-emerald-50 text-emerald-700 ring-emerald-200' : w.status === 'rejected' ? 'bg-red-50 text-red-700 ring-red-200' : 'bg-amber-50 text-amber-700 ring-amber-200';
+          return `<tr><td class="px-4 py-2.5 text-[12.5px] text-slate-600">${fmtDate(w.requestedAt)}</td><td class="px-4 py-2.5 text-[12.5px] text-slate-700 uppercase">${escapeHtml(w.paymentMethod)}</td><td class="px-4 py-2.5 text-[13px] font-semibold text-right">${fmtMoney(w.amountMicro)}</td><td class="px-4 py-2.5 text-right"><span class="inline-flex px-2 py-0.5 rounded-md text-[11px] font-semibold ring-1 ${sc} capitalize">${escapeHtml(w.status)}</span></td></tr>`;
+        }).join('');
+      } catch (err) { console.error('withdrawals', err); }
+    }
+
+    // Payout modal
+    $('openPayoutBtn').addEventListener('click', () => {
+      $('payoutModal').classList.remove('hidden'); $('payoutModal').classList.add('flex');
+      $('payoutAlert').classList.add('hidden');
+    });
+    $('closePayout').addEventListener('click', () => { $('payoutModal').classList.add('hidden'); $('payoutModal').classList.remove('flex'); });
+    $('cancelPayout').addEventListener('click', () => { $('payoutModal').classList.add('hidden'); $('payoutModal').classList.remove('flex'); });
+    $('payoutModal').addEventListener('click', (e) => { if (e.target === $('payoutModal')) { $('payoutModal').classList.add('hidden'); $('payoutModal').classList.remove('flex'); } });
+    $('payoutForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const amt = Number($('payoutAmount').value);
+      const method = $('payoutMethod').value;
+      const details = $('payoutDetails').value.trim();
+      const alertBox = $('payoutAlert');
+      const min = state.settings?.minWithdrawalMicro ?? 5_000_000;
+      if (!Number.isFinite(amt) || amt * 1_000_000 < min) {
+        alertBox.className = 'text-[13px] px-3.5 py-2.5 rounded-lg bg-red-50 text-red-700 ring-1 ring-red-200';
+        alertBox.textContent = `Minimum withdrawal is ${fmtMoney(min)}`;
+        alertBox.classList.remove('hidden');
+        return;
+      }
+      if (details.length < 3) {
+        alertBox.className = 'text-[13px] px-3.5 py-2.5 rounded-lg bg-red-50 text-red-700 ring-1 ring-red-200';
+        alertBox.textContent = 'Enter valid payment details.';
+        alertBox.classList.remove('hidden');
+        return;
+      }
+      try {
+        await API.post('/api/withdrawals', { amountMicro: Math.round(amt * 1_000_000), paymentMethod: method, paymentDetails: details });
+        alertBox.className = 'text-[13px] px-3.5 py-2.5 rounded-lg bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200';
+        alertBox.textContent = 'Withdrawal request submitted.';
+        alertBox.classList.remove('hidden');
+        setTimeout(async () => { $('payoutModal').classList.add('hidden'); $('payoutModal').classList.remove('flex'); showToast('Payout request submitted'); await Promise.all([loadOverview(), loadWithdrawals()]); }, 900);
+      } catch (err) {
+        alertBox.className = 'text-[13px] px-3.5 py-2.5 rounded-lg bg-red-50 text-red-700 ring-1 ring-red-200';
+        alertBox.textContent = err.message || 'Failed to submit';
+        alertBox.classList.remove('hidden');
+      }
+    });
+
+    // ── Referral ──
+    async function loadReferrals() {
+      try {
+        const [sRes, hRes] = await Promise.all([API.get('/api/referrals/summary'), API.get('/api/referrals/history')]);
+        $('referralLink').value = sRes.referralLink || '';
+        $('refTotal').textContent = sRes.totalReferrals || 0;
+        const list = hRes.referrals || [];
+        if (!list.length) {
+          $('refTbody').innerHTML = '<tr><td colspan="2" class="px-4 py-8 text-center text-[13px] text-slate-400">No commissions yet. Share your link to start earning.</td></tr>';
+        } else {
+          $('refTbody').innerHTML = list.map(r => `<tr><td class="px-4 py-2.5 text-[12.5px] text-slate-600">${fmtDate(r.createdAt)}</td><td class="px-4 py-2.5 text-[13px] font-bold text-emerald-600 text-right">${fmtMoney(r.commissionMicro)}</td></tr>`).join('');
+        }
+      } catch (err) { console.error('referrals', err); }
+    }
+    $('copyReferralBtn').addEventListener('click', () => copyLink($('referralLink').value));
+
+    // ── Auth UI ──
+    $('userBtn').addEventListener('click', (e) => { e.stopPropagation(); $('userDropdown').classList.toggle('hidden'); });
+    document.addEventListener('click', () => $('userDropdown').classList.add('hidden'));
+    async function signOut() { await auth.signOut(); window.location.replace('/'); }
+    $('signOutBtn').addEventListener('click', signOut);
+    document.querySelector('.mobile-signout')?.addEventListener('click', signOut);
+
+    // ── Mobile menu ──
+    const mm = $('mobileMenu');
+    function openMM() { mm.classList.remove('hidden'); document.body.classList.add('no-scroll'); }
+    function closeMM() {
+      if (!mm || mm.classList.contains('hidden')) return;
+      mm.querySelector('.slide-in')?.classList.remove('slide-in');
+      mm.querySelector('.slide-in')?.classList.add('slide-out');
+      setTimeout(() => { mm.classList.add('hidden'); document.body.classList.remove('no-scroll'); }, 180);
+    }
+    $('hamburgerBtn').addEventListener('click', () => mm.classList.contains('hidden') ? openMM() : closeMM());
+    mm.addEventListener('click', (e) => { if (e.target === mm) closeMM(); });
+
+    // ── Legal ──
+    const termsM = $('termsModal'), privM = $('privacyModal');
+    function openL(m) { m.classList.remove('hidden'); m.classList.add('flex'); document.body.classList.add('no-scroll'); }
+    function closeL(m) { m.classList.add('hidden'); m.classList.remove('flex'); document.body.classList.remove('no-scroll'); }
+    document.querySelectorAll('.open-terms').forEach(el => el.addEventListener('click', () => openL(termsM)));
+    document.querySelectorAll('.open-privacy').forEach(el => el.addEventListener('click', () => openL(privM)));
+    document.querySelectorAll('.close-legal').forEach(el => el.addEventListener('click', (e) => {
+      const p = e.target.closest('#termsModal, #privacyModal');
+      if (p) closeL(p);
+    }));
+    termsM.addEventListener('click', (e) => { if (e.target === termsM) closeL(termsM); });
+    privM.addEventListener('click', (e) => { if (e.target === privM) closeL(privM); });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (!termsM.classList.contains('hidden')) closeL(termsM);
+        if (!privM.classList.contains('hidden')) closeL(privM);
+        if (!mm.classList.contains('hidden')) closeMM();
+        $('editFlowModal').classList.add('hidden'); $('editFlowModal').classList.remove('flex');
+        $('payoutModal').classList.add('hidden'); $('payoutModal').classList.remove('flex');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog Article</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #ffffff; }
+    .spin{animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+    .pulse-btn { animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); } 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); } }
+  </style>
+</head>
+<body class="text-gray-800 antialiased pb-20">
+
+  <!-- Simple Header -->
+  <header class="border-b border-gray-200 bg-white sticky top-0 z-50">
+    <div class="max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-2 font-bold text-xl text-gray-900">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        My Blog
+      </div>
+      <nav class="text-sm font-medium text-gray-500">
+        Home / Article
+      </nav>
+    </div>
+  </header>
+
+  <!-- Loading State -->
+  <div id="statusCard" class="max-w-3xl mx-auto mt-20 p-8 text-center">
+    <svg class="spin inline-block mb-4" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+    <h2 class="text-lg font-medium text-gray-600">Loading article...</h2>
+  </div>
+
+  <!-- Main Content -->
+  <main id="stepView" class="hidden max-w-3xl mx-auto mt-10 px-4 mb-16">
+    
+    <!-- Article Header -->
+    <div class="mb-6">
+      <span class="text-blue-600 font-semibold text-xs uppercase tracking-wider">Digital Marketing</span>
+      <h1 id="blogTitle" class="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight mt-2 mb-4"></h1>
+      <div class="flex items-center gap-3 text-sm text-gray-500">
+        <div>
+          <span id="blogAuthor" class="font-medium text-gray-900 block"></span>
+          <span id="blogDate" class="text-xs"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SQUARE AD SPACE (Title ke theek niche) -->
+    <div class="mb-2 flex justify-center w-full">
+        <div id="adContainer" class="w-full max-w-[320px] aspect-square flex items-center justify-center bg-gray-50 border border-gray-200 overflow-hidden">
+            <!-- Ad loads here -->
+        </div>
+    </div>
+
+    <!-- TIMER TEXT (Ad ke theek niche bina kisi box ke) -->
+    <div class="text-center mb-8 h-12">
+        <!-- Timer Loader (Initially Visible) -->
+        <div id="timerLoader" class="flex items-center justify-center gap-2 text-gray-900 font-semibold text-lg">
+            <svg class="spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+            Wait <span id="countdown">20</span>s
+        </div>
+        
+        <!-- Timer Message (Changes after timer ends) -->
+        <p id="timerMessage" class="text-sm text-gray-500 font-normal mt-1">
+            Please wait for the timer to finish.
+        </p>
+    </div>
+
+    <!-- Article Content -->
+    <div class="text-gray-700 text-base sm:text-lg leading-relaxed space-y-5 mb-10">
+      <p id="blogPara1"></p>
+      <p id="blogPara2"></p>
+      <p id="blogPara3"></p>
+      <p id="blogPara4"></p>
+    </div>
+
+    <!-- CONTINUE BUTTON (Sabse last mein, initially hidden) -->
+    <div id="continueBtnContainer" class="hidden text-center mt-10 border-t border-gray-200 pt-8">
+      <button id="continueBtn" class="pulse-btn w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold text-lg px-12 py-3 rounded-lg shadow-md transition-all">
+        Continue to Next Page ➔
+      </button>
+    </div>
+
+  </main>
+
+  <script src="/js/redirect.js"></script>
+</body>
+</html>

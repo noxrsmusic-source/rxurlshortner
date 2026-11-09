@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — RX URL Shorter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = { theme: { extend: {
+      fontFamily: { sans: ['Inter','sans-serif'] },
+      colors: { brand: { 50:'#EFF6FF',100:'#DBEAFE',200:'#BFDBFE',300:'#93C5FD',400:'#60A5FA',500:'#3B82F6',600:'#2563EB',700:'#1D4ED8',800:'#1E40AF',900:'#1E3A8A',950:'#172554' } }
+    }}};
+  </script>
+  <style>
+    body{font-family:'Inter',sans-serif}
+    .spin{animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+    .fade-in{animation:fadeIn .25s ease-out}@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    .admin-section{display:none}
+    .admin-section.active{display:block}
+    .admin-tab.active{background:#1D4ED8;color:white}
+    .skeleton{background:linear-gradient(90deg,#f1f5f9 25%,#e2e8f0 50%,#f1f5f9 75%);background-size:200% 100%;animation:sk 1.5s infinite}
+    @keyframes sk{0%{background-position:200% 0}100%{background-position:-200% 0}}
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-900 antialiased min-h-screen">
+
+  <div id="pageLoading" class="fixed inset-0 z-[100] bg-white flex items-center justify-center">
+    <div class="text-center">
+      <svg class="spin inline-block mb-3" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1D4ED8" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+      <p class="text-[13px] text-slate-500">Verifying admin…</p>
+    </div>
+  </div>
+
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="hidden lg:flex flex-col w-64 bg-slate-900 text-slate-300 shrink-0">
+      <div class="p-5 border-b border-slate-800">
+        <div class="flex items-center gap-2 text-white font-bold text-[15px]">
+          <span class="inline-flex items-center justify-center w-7 h-7 rounded-md bg-brand-600">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          </span>
+          <div><div>RX Admin</div><div class="text-[10px] text-slate-500 font-normal">Control Panel</div></div>
+        </div>
+      </div>
+      <nav class="flex-1 overflow-y-auto py-3">
+        <button data-section="overview" class="admin-tab w-full text-left px-5 py-2.5 text-[13.5px] font-medium hover:bg-slate-800">Overview</button>
+        <button data-section="users" class="admin-tab w-full text-left px-5 py-2.5 text-[13.5px] font-medium hover:bg-slate-800">Users</button>
+        <button data-section="links" class="admin-tab w-full text-left px-5 py-2.5 text-[13.5px] font-medium hover:bg-slate-800">Links</button>
+        <button data-section="clicks" class="admin-tab w-full text-left px-5 py-2.5 text-[13.5px] font-medium hover:bg-slate-800">Click Analytics</button>
+        <button data-section="journeys" class="admin-tab w-full text-left px-5 py-2.5 text-[13.5px] font-medium hover:bg-slate-800">Journey Management</button>
+        <button data-section="ads" class="admin-tab w-full text-left px-5 py-2.5 text-[13.5px] font-medium hover:bg-slate-800">Ad Management</button>
+        <button data-section="rates" class="admin-tab w-full text-left px-5 py-2.5 text-[13.5px] font-medium hover:bg-slate-800">CPM &amp; Rates</button>
+        <button data-section="revenue" class="admin-tab w-full text-left px-5 py-2.5 text-[13.5px] font-medium hover:bg-slate-800">Earnings &amp; Revenue</button>
+        <button data-section="withdrawals" class="admin-tab w-full text-left px-5 py-2.5 text-[13.5px] font-medium hover:bg-slate-800">Withdrawals</button>
+        <button data-section="referrals" class="admin-tab w-full text-left px-5 py-2.5 text-[13.5px] font-medium hover:bg-slate-800">Referrals</button>
+        <button data-section="transactions" class="admin-tab w-full text-left px-5 py-2.5 text-[13.5px] font-medium hover:bg-slate-800">Transactions</button>
+        <button data-section="reports" class="admin-tab w-full text-left px-5 py-2.5 text-[13.5px] font-medium hover:bg-slate-800">Reports</button>
+        <button data-section="settings" class="admin-tab w-full text-left px-5 py-2.5 text-[13.5px] font-medium hover:bg-slate-800">Global Settings</button>
+        <button data-section="logs" class="admin-tab w-full text-left px-5 py-2.5 text-[13.5px] font-medium hover:bg-slate-800">Admin Logs</button>
+      </nav>
+      <div class="p-4 border-t border-slate-800 text-[12px]">
+        <p id="adminName" class="font-semibold text-white truncate">—</p>
+        <p id="adminEmail" class="text-slate-500 truncate">—</p>
+        <button id="signOutBtn" class="mt-3 w-full text-left text-red-400 hover:text-red-300">Sign Out</button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="flex-1 min-w-0">
+      <header class="bg-white border-b border-slate-200 sticky top-0 z-30">
+        <div class="px-4 sm:px-6 py-3 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <button id="hamburgerBtn" class="lg:hidden w-9 h-9 rounded-md hover:bg-slate-100 flex items-center justify-center">☰</button>
+            <h1 id="pageTitle" class="text-[16px] font-bold text-slate-900">Overview</h1>
+          </div>
+          <div class="flex items-center gap-2">
+            <a href="/dashboard.html" class="text-[12px] text-slate-600 hover:text-slate-900 font-semibold">User Dashboard →</a>
+          </div>
+        </div>
+      </header>
+
+      <main class="p-4 sm:p-6 space-y-5">
+        <!-- Overview -->
+        <section id="section-overview" class="admin-section active">
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <div class="bg-white rounded-xl ring-1 ring-slate-200 p-5"><p class="text-[11.5px] font-semibold uppercase text-slate-500">Total Users</p><p id="ovUsers" class="mt-2 text-[24px] font-extrabold">—</p></div>
+            <div class="bg-white rounded-xl ring-1 ring-slate-200 p-5"><p class="text-[11.5px] font-semibold uppercase text-slate-500">Total Links</p><p id="ovLinks" class="mt-2 text-[24px] font-extrabold">—</p></div>
+            <div class="bg-white rounded-xl ring-1 ring-slate-200 p-5"><p class="text-[11.5px] font-semibold uppercase text-slate-500">Valid Clicks</p><p id="ovClicks" class="mt-2 text-[24px] font-extrabold">—</p></div>
+            <div class="bg-white rounded-xl ring-1 ring-slate-200 p-5"><p class="text-[11.5px] font-semibold uppercase text-slate-500">Pending Payouts</p><p id="ovWithdrawals" class="mt-2 text-[24px] font-extrabold">—</p></div>
+          </div>
+        </section>
+
+        <!-- Users -->
+        <section id="section-users" class="admin-section">
+          <div class="bg-white rounded-xl ring-1 ring-slate-200 overflow-hidden">
+            <div class="p-5 border-b border-slate-200"><h2 class="text-[15px] font-bold">Users</h2></div>
+            <div class="overflow-x-auto"><table class="w-full text-left min-w-[640px]">
+              <thead class="bg-slate-50 border-b"><tr><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Name</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Email</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Role</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Status</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500 text-right">Actions</th></tr></thead>
+              <tbody id="usersTbody" class="divide-y divide-slate-100"><tr><td colspan="5" class="px-4 py-8 text-center text-[13px] text-slate-400">Loading…</td></tr></tbody>
+            </table></div>
+          </div>
+        </section>
+
+        <!-- Links -->
+        <section id="section-links" class="admin-section">
+          <div class="bg-white rounded-xl ring-1 ring-slate-200 overflow-hidden">
+            <div class="p-5 border-b"><h2 class="text-[15px] font-bold">Links</h2></div>
+            <div class="overflow-x-auto"><table class="w-full text-left min-w-[780px]">
+              <thead class="bg-slate-50 border-b"><tr><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Short</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Destination</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Flow</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500 text-right">Clicks</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Status</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500 text-right">Actions</th></tr></thead>
+              <tbody id="adminLinksTbody" class="divide-y divide-slate-100"><tr><td colspan="6" class="px-4 py-8 text-center text-[13px] text-slate-400">Loading…</td></tr></tbody>
+            </table></div>
+          </div>
+        </section>
+
+        <!-- Clicks -->
+        <section id="section-clicks" class="admin-section">
+          <div class="bg-white rounded-xl ring-1 ring-slate-200 p-5">
+            <h2 class="text-[15px] font-bold mb-3">Click Analytics</h2>
+            <p class="text-[13px] text-slate-500">Recent click records. Only <strong>valid</strong> clicks generate earnings.</p>
+            <div class="mt-4 overflow-x-auto"><table class="w-full text-left min-w-[500px]">
+              <thead class="bg-slate-50 border-b"><tr><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Date</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Flow</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Validation</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Earning status</th></tr></thead>
+              <tbody id="clicksTbody" class="divide-y divide-slate-100"><tr><td colspan="4" class="px-4 py-8 text-center text-[13px] text-slate-400">Loading…</td></tr></tbody>
+            </table></div>
+          </div>
+        </section>
+
+        <!-- Journeys -->
+        <section id="section-journeys" class="admin-section">
+          <div class="bg-white rounded-xl ring-1 ring-slate-200 p-5">
+            <h2 class="text-[15px] font-bold mb-1">Journey Management</h2>
+            <p class="text-[13px] text-slate-500 mb-4">Enable or disable advertising flows. When a flow is disabled, new links cannot use it.</p>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+              <label class="rounded-lg ring-1 ring-slate-200 p-4 cursor-pointer hover:bg-slate-50"><div class="flex items-center justify-between"><span class="text-[14px] font-semibold">1-page flow</span><input type="checkbox" data-flow="1" class="w-4 h-4 rounded" /></div></label>
+              <label class="rounded-lg ring-1 ring-slate-200 p-4 cursor-pointer hover:bg-slate-50"><div class="flex items-center justify-between"><span class="text-[14px] font-semibold">2-page flow</span><input type="checkbox" data-flow="2" class="w-4 h-4 rounded" /></div></label>
+              <label class="rounded-lg ring-1 ring-slate-200 p-4 cursor-pointer hover:bg-slate-50"><div class="flex items-center justify-between"><span class="text-[14px] font-semibold">3-page flow</span><input type="checkbox" data-flow="3" class="w-4 h-4 rounded" /></div></label>
+              <label class="rounded-lg ring-1 ring-slate-200 p-4 cursor-pointer hover:bg-slate-50"><div class="flex items-center justify-between"><span class="text-[14px] font-semibold">4-page flow</span><input type="checkbox" data-flow="4" class="w-4 h-4 rounded" /></div></label>
+            </div>
+            <button id="saveFlowsBtn" class="mt-4 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-[13.5px] px-5 py-2.5 rounded-lg">Save Flow Settings</button>
+          </div>
+        </section>
+
+        <!-- Ads -->
+        <section id="section-ads" class="admin-section">
+          <div class="bg-white rounded-xl ring-1 ring-slate-200 p-5">
+            <h2 class="text-[15px] font-bold mb-1">Ad Management</h2>
+            <p class="text-[13px] text-red-600 bg-red-50 ring-1 ring-red-200 px-3 py-2 rounded mb-4">⚠ Only paste ad code from advertising networks whose terms permit URL-shortener traffic. Violating a network's policy may result in account termination.</p>
+            <div class="space-y-4">
+              <div><label class="block text-[12.5px] font-semibold text-slate-700 mb-1.5">Page 1 ad HTML/JS</label><textarea id="adPage1" rows="4" class="w-full px-3 py-2 rounded-lg border border-slate-200 outline-none text-[12px] font-mono"></textarea><label class="inline-flex items-center gap-2 mt-1 text-[12px]"><input type="checkbox" id="adPage1Enabled" class="w-3.5 h-3.5" /> Enabled</label></div>
+              <div><label class="block text-[12.5px] font-semibold text-slate-700 mb-1.5">Page 2 ad HTML/JS</label><textarea id="adPage2" rows="4" class="w-full px-3 py-2 rounded-lg border border-slate-200 outline-none text-[12px] font-mono"></textarea><label class="inline-flex items-center gap-2 mt-1 text-[12px]"><input type="checkbox" id="adPage2Enabled" class="w-3.5 h-3.5" /> Enabled</label></div>
+              <div><label class="block text-[12.5px] font-semibold text-slate-700 mb-1.5">Page 3 ad HTML/JS</label><textarea id="adPage3" rows="4" class="w-full px-3 py-2 rounded-lg border border-slate-200 outline-none text-[12px] font-mono"></textarea><label class="inline-flex items-center gap-2 mt-1 text-[12px]"><input type="checkbox" id="adPage3Enabled" class="w-3.5 h-3.5" /> Enabled</label></div>
+              <div><label class="block text-[12.5px] font-semibold text-slate-700 mb-1.5">Page 4 ad HTML/JS</label><textarea id="adPage4" rows="4" class="w-full px-3 py-2 rounded-lg border border-slate-200 outline-none text-[12px] font-mono"></textarea><label class="inline-flex items-center gap-2 mt-1 text-[12px]"><input type="checkbox" id="adPage4Enabled" class="w-3.5 h-3.5" /> Enabled</label></div>
+            </div>
+            <button id="saveAdsBtn" class="mt-4 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-[13.5px] px-5 py-2.5 rounded-lg">Save Ad Placements</button>
+          </div>
+        </section>
+
+        <!-- Rates -->
+        <section id="section-rates" class="admin-section">
+          <div class="bg-white rounded-xl ring-1 ring-slate-200 p-5">
+            <h2 class="text-[15px] font-bold mb-3">CPM &amp; Payout Rates</h2>
+            <p class="text-[12.5px] text-slate-500 mb-4">Amounts are per 1,000 clicks in USD. Stored as micro-dollars internally.</p>
+            <div class="grid sm:grid-cols-2 gap-3">
+              <div><label class="block text-[12px] font-semibold text-slate-700 mb-1">1-page default ($/1k)</label><input id="flowRate1" type="number" step="0.01" min="0" class="w-full px-3 py-2 rounded-lg border border-slate-200 outline-none text-[13px]" /></div>
+              <div><label class="block text-[12px] font-semibold text-slate-700 mb-1">2-page default ($/1k)</label><input id="flowRate2" type="number" step="0.01" min="0" class="w-full px-3 py-2 rounded-lg border border-slate-200 outline-none text-[13px]" /></div>
+              <div><label class="block text-[12px] font-semibold text-slate-700 mb-1">3-page default ($/1k)</label><input id="flowRate3" type="number" step="0.01" min="0" class="w-full px-3 py-2 rounded-lg border border-slate-200 outline-none text-[13px]" /></div>
+              <div><label class="block text-[12px] font-semibold text-slate-700 mb-1">4-page default ($/1k)</label><input id="flowRate4" type="number" step="0.01" min="0" class="w-full px-3 py-2 rounded-lg border border-slate-200 outline-none text-[13px]" /></div>
+              <div><label class="block text-[12px] font-semibold text-slate-700 mb-1">Default rate (unlisted) ($/1k)</label><input id="defaultRateInput" type="number" step="0.01" min="0" class="w-full px-3 py-2 rounded-lg border border-slate-200 outline-none text-[13px]" /></div>
+              <div><label class="block text-[12px] font-semibold text-slate-700 mb-1">Publisher share (%)</label><input id="publisherShare" type="number" step="0.1" min="0" max="100" class="w-full px-3 py-2 rounded-lg border border-slate-200 outline-none text-[13px]" /></div>
+              <div><label class="block text-[12px] font-semibold text-slate-700 mb-1">Referral commission (%)</label><input id="referralPercent" type="number" step="0.1" min="0" max="100" class="w-full px-3 py-2 rounded-lg border border-slate-200 outline-none text-[13px]" /></div>
+              <div><label class="block text-[12px] font-semibold text-slate-700 mb-1">Min withdrawal ($)</label><input id="minWithdrawal" type="number" step="0.01" min="0" class="w-full px-3 py-2 rounded-lg border border-slate-200 outline-none text-[13px]" /></div>
+              <div><label class="block text-[12px] font-semibold text-slate-700 mb-1">Currency</label><input id="currencyInput" type="text" maxlength="8" class="w-full px-3 py-2 rounded-lg border border-slate-200 outline-none text-[13px]" /></div>
+            </div>
+            <div class="mt-3 text-[12px] text-slate-500">Country-specific rates can be edited via the API (<code class="bg-slate-100 px-1 rounded">PATCH /api/admin/settings</code> with <code>countryRates</code>). Not exposed as a UI grid here to keep the panel focused.</div>
+            <button id="saveRatesBtn" class="mt-4 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-[13.5px] px-5 py-2.5 rounded-lg">Save Settings</button>
+          </div>
+        </section>
+
+        <!-- Revenue -->
+        <section id="section-revenue" class="admin-section">
+          <div class="bg-white rounded-xl ring-1 ring-slate-200 p-5">
+            <h2 class="text-[15px] font-bold mb-3">Earnings &amp; Revenue</h2>
+            <p class="text-[13px] text-slate-500">Earnings ledger. All amounts are estimated from configured rates — actual ad-network revenue reconciliation is not implemented (see limitations).</p>
+            <div class="mt-4 overflow-x-auto"><table class="w-full text-left min-w-[600px]">
+              <thead class="bg-slate-50 border-b"><tr><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Date</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Owner</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Source</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500 text-right">Publisher</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500 text-right">Platform</th></tr></thead>
+              <tbody id="revenueTbody" class="divide-y divide-slate-100"><tr><td colspan="5" class="px-4 py-8 text-center text-[13px] text-slate-400">Loading…</td></tr></tbody>
+            </table></div>
+            <p class="text-[11.5px] text-slate-400 mt-3">Note: the earnings endpoint <code>/api/earnings/history</code> is user-scoped. Admin aggregate ledger requires a new admin endpoint — see limitations.</p>
+          </div>
+        </section>
+
+        <!-- Withdrawals -->
+        <section id="section-withdrawals" class="admin-section">
+          <div class="bg-white rounded-xl ring-1 ring-slate-200 overflow-hidden">
+            <div class="p-5 border-b flex items-center justify-between"><h2 class="text-[15px] font-bold">Withdrawals</h2><select id="withdrawalsFilter" class="px-3 py-1.5 rounded-lg border border-slate-200 text-[12.5px] bg-white"><option value="">All</option><option value="pending">Pending</option><option value="approved">Approved</option><option value="processing">Processing</option><option value="paid">Paid</option><option value="rejected">Rejected</option></select></div>
+            <div class="overflow-x-auto"><table class="w-full text-left min-w-[800px]">
+              <thead class="bg-slate-50 border-b"><tr><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Date</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Owner</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Method</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500 text-right">Amount</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Status</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500 text-right">Actions</th></tr></thead>
+              <tbody id="adminWithdrawalsTbody" class="divide-y divide-slate-100"><tr><td colspan="6" class="px-4 py-8 text-center text-[13px] text-slate-400">Loading…</td></tr></tbody>
+            </table></div>
+          </div>
+        </section>
+
+        <!-- Referrals -->
+        <section id="section-referrals" class="admin-section">
+          <div class="bg-white rounded-xl ring-1 ring-slate-200 p-5">
+            <h2 class="text-[15px] font-bold mb-3">Referral Commissions</h2>
+            <p class="text-[13px] text-slate-500">Admin-level referral aggregate requires a dedicated admin endpoint — see limitations. Individual user data is available via <code class="bg-slate-100 px-1 rounded">/api/referrals/history</code> when signed in as that user.</p>
+          </div>
+        </section>
+
+        <!-- Transactions -->
+        <section id="section-transactions" class="admin-section">
+          <div class="bg-white rounded-xl ring-1 ring-slate-200 p-5">
+            <h2 class="text-[15px] font-bold mb-3">Transactions</h2>
+            <p class="text-[13px] text-slate-500">Global transaction ledger requires a dedicated admin endpoint — see limitations. Individual user transactions are in Firestore <code>transactions</code> collection.</p>
+          </div>
+        </section>
+
+        <!-- Reports -->
+        <section id="section-reports" class="admin-section">
+          <div class="bg-white rounded-xl ring-1 ring-slate-200 p-5">
+            <h2 class="text-[15px] font-bold mb-3">Reports</h2>
+            <p class="text-[13px] text-slate-500">Aggregate reports require dedicated admin aggregate endpoints. See limitations.</p>
+          </div>
+        </section>
+
+        <!-- Settings -->
+        <section id="section-settings" class="admin-section">
+          <div class="bg-white rounded-xl ring-1 ring-slate-200 p-5">
+            <h2 class="text-[15px] font-bold mb-3">Global Settings</h2>
+            <p class="text-[13px] text-slate-500">Edit primary platform settings. Advanced fields (country rates, ad placements) are on their own pages above.</p>
+            <div class="grid sm:grid-cols-2 gap-3 mt-4">
+              <div><label class="block text-[12px] font-semibold text-slate-700 mb-1">Publisher share (%)</label><input id="globalPublisherShare" type="number" step="0.1" min="0" max="100" class="w-full px-3 py-2 rounded-lg border border-slate-200 outline-none text-[13px]" /></div>
+              <div><label class="block text-[12px] font-semibold text-slate-700 mb-1">Referral percent (%)</label><input id="globalReferralPercent" type="number" step="0.1" min="0" max="100" class="w-full px-3 py-2 rounded-lg border border-slate-200 outline-none text-[13px]" /></div>
+              <div><label class="block text-[12px] font-semibold text-slate-700 mb-1">Currency</label><input id="globalCurrency" type="text" maxlength="8" class="w-full px-3 py-2 rounded-lg border border-slate-200 outline-none text-[13px]" /></div>
+              <div><label class="block text-[12px] font-semibold text-slate-700 mb-1">Min withdrawal ($)</label><input id="globalMinWithdrawal" type="number" step="0.01" class="w-full px-3 py-2 rounded-lg border border-slate-200 outline-none text-[13px]" /></div>
+            </div>
+            <button id="saveGlobalBtn" class="mt-4 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-[13.5px] px-5 py-2.5 rounded-lg">Save Global Settings</button>
+          </div>
+        </section>
+
+        <!-- Logs -->
+        <section id="section-logs" class="admin-section">
+          <div class="bg-white rounded-xl ring-1 ring-slate-200 p-5">
+            <h2 class="text-[15px] font-bold mb-3">Admin Activity Logs</h2>
+            <div class="overflow-x-auto"><table class="w-full text-left min-w-[500px]">
+              <thead class="bg-slate-50 border-b"><tr><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Date</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Admin</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Action</th><th class="px-4 py-2.5 text-[11px] font-bold uppercase text-slate-500">Target</th></tr></thead>
+              <tbody id="logsTbody" class="divide-y divide-slate-100"><tr><td colspan="4" class="px-4 py-8 text-center text-[13px] text-slate-400">Loading…</td></tr></tbody>
+            </table></div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] bg-slate-900 text-white text-[13px] font-medium px-4 py-2.5 rounded-lg shadow-lg fade-in"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="/js/firebase-config.js"></script>
+  <script src="/js/api.js"></script>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    firebase.initializeApp(window.firebaseConfig);
+    const auth = firebase.auth();
+
+    const microToDollars = (m) => ((m || 0) / 1_000_000);
+    const dollarsToMicro = (d) => Math.round(Number(d || 0) * 1_000_000);
+    const fmtMoney = (m) => '$' + microToDollars(m).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const fmtDate = (ts) => {
+      if (!ts) return '—';
+      const d = ts._seconds ? new Date(ts._seconds * 1000) : new Date(ts);
+      return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    };
+    function showToast(msg) {
+      const t = $('toast'); t.textContent = msg; t.classList.remove('hidden');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => t.classList.add('hidden'), 2200);
+    }
+    function escapeHtml(s) {
+      return String(s || '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+    }
+
+    // ── Admin auth gate ──
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) return window.location.replace('/');
+      try {
+        const tok = await user.getIdTokenResult(true);
+        if (tok.claims.admin !== true) {
+          document.body.innerHTML = '<div class="min-h-screen flex items-center justify-center p-6"><div class="max-w-md text-center bg-white rounded-2xl ring-1 ring-red-200 p-8"><h1 class="text-[20px] font-extrabold text-red-700">Admin Access Required</h1><p class="mt-2 text-[14px] text-slate-600">Your account does not have admin privileges.</p><a href="/dashboard.html" class="mt-4 inline-block bg-brand-600 hover:bg-brand-700 text-white font-semibold text-[13.5px] px-5 py-2.5 rounded-lg">Go to my dashboard</a></div></div>';
+          return;
+        }
+        $('adminName').textContent = user.displayName || 'Admin';
+        $('adminEmail').textContent = user.email;
+        $('pageLoading').classList.add('hidden');
+        await loadOverview();
+      } catch (err) {
+        document.body.innerHTML = '<div class="min-h-screen flex items-center justify-center p-6"><p class="text-red-600 font-semibold">Authentication error: ' + escapeHtml(err.message) + '</p></div>';
+      }
+    });
+
+    async function signOut() { await auth.signOut(); window.location.replace('/'); }
+    $('signOutBtn').addEventListener('click', signOut);
+
+    // ── Nav ──
+    const navBtns = document.querySelectorAll('.admin-tab');
+    const sections = document.querySelectorAll('.admin-section');
+    const titleMap = { overview:'Overview', users:'Users', links:'Links', clicks:'Click Analytics', journeys:'Journey Management', ads:'Ad Management', rates:'CPM & Rates', revenue:'Earnings & Revenue', withdrawals:'Withdrawals', referrals:'Referrals', transactions:'Transactions', reports:'Reports', settings:'Global Settings', logs:'Admin Logs' };
+    async function showSection(id) {
+      sections.forEach(s => s.classList.remove('active'));
+      const t = document.getElementById('section-' + id);
+      if (t) t.classList.add('active');
+      navBtns.forEach(b => b.classList.toggle('active', b.dataset.section === id));
+      $('pageTitle').textContent = titleMap[id] || id;
+      try {
+        if (id === 'overview') await loadOverview();
+        else if (id === 'users') await loadUsers();
+        else if (id === 'links') await loadAdminLinks();
+        else if (id === 'clicks') await loadClicks();
+        else if (id === 'journeys') await loadJourneys();
+        else if (id === 'ads') await loadAds();
+        else if (id === 'rates' || id === 'settings') await loadRates();
+        else if (id === 'withdrawals') await loadWithdrawals();
+        else if (id === 'logs') await loadLogs();
+      } catch (err) { showToast(err.message || 'Load failed'); }
+    }
+    navBtns.forEach(b => b.addEventListener('click', () => showSection(b.dataset.section)));
+    showSection('overview');
+
+    // ── Overview ──
+    async function loadOverview() {
+      const res = await API.get('/api/admin/overview');
+      $('ovUsers').textContent = (res.totalUsers ?? 0).toLocaleString();
+      $('ovLinks').textContent = (res.totalLinks ?? 0).toLocaleString();
+      $('ovClicks').textContent = (res.validClicks ?? 0).toLocaleString();
+      $('ovWithdrawals').textContent = (res.pendingWithdrawals ?? 0).toLocaleString();
+    }
+
+    // ── Users ──
+    async function loadUsers() {
+      const res = await API.get('/api/admin/users');
+      const users = res.users || [];
+      if (!users.length) {
+        $('usersTbody').innerHTML = '<tr><td colspan="5" class="px-4 py-8 text-center text-[13px] text-slate-400">No users.</td></tr>';
+        return;
+      }
+      $('usersTbody').innerHTML = users.map(u => {
+        const statusColor = u.accountStatus === 'active' ? 'bg-emerald-50 text-emerald-700 ring-emerald-200' : 'bg-red-50 text-red-700 ring-red-200';
+        const action = u.accountStatus === 'active'
+          ? `<button onclick="setUserStatus('${u.uid}','suspended')" class="text-[12px] font-semibold text-red-600 hover:text-red-800 px-2 py-1 rounded hover:bg-red-50">Suspend</button>`
+          : `<button onclick="setUserStatus('${u.uid}','active')" class="text-[12px] font-semibold text-emerald-600 hover:text-emerald-800 px-2 py-1 rounded hover:bg-emerald-50">Reactivate</button>`;
+        return `<tr><td class="px-4 py-2.5 text-[13px] text-slate-800">${escapeHtml(u.name || '—')}</td><td class="px-4 py-2.5 text-[12.5px] text-slate-600">${escapeHtml(u.email || '—')}</td><td class="px-4 py-2.5 text-[12.5px] text-slate-600 capitalize">${escapeHtml(u.role || 'user')}</td><td class="px-4 py-2.5"><span class="inline-flex px-2 py-0.5 rounded-md text-[11px] font-semibold ring-1 ${statusColor} capitalize">${escapeHtml(u.accountStatus || '—')}</span></td><td class="px-4 py-2.5 text-right">${action}</td></tr>`;
+      }).join('');
+    }
+    window.setUserStatus = async (uid, status) => {
+      try {
+        await API.patch(`/api/admin/users/${uid}/status`, { status });
+        showToast('User status updated');
+        await loadUsers();
+      } catch (err) { showToast(err.message); }
+    };
+
+    // ── Links ──
+    async function loadAdminLinks() {
+      const res = await API.get('/api/admin/links');
+      const links = res.links || [];
+      if (!links.length) {
+        $('adminLinksTbody').innerHTML = '<tr><td colspan="6" class="px-4 py-8 text-center text-[13px] text-slate-400">No links.</td></tr>';
+        return;
+      }
+      $('adminLinksTbody').innerHTML = links.map(l => {
+        const statusColor = l.status === 'active' ? 'bg-emerald-50 text-emerald-700 ring-emerald-200' : 'bg-red-50 text-red-700 ring-red-200';
+        const action = l.status === 'active'
+          ? `<button onclick="setAdminLinkStatus('${l.linkId}','paused')" class="text-[12px] font-semibold text-amber-600 hover:text-amber-800 px-2 py-1 rounded hover:bg-amber-50">Pause</button>`
+          : `<button onclick="setAdminLinkStatus('${l.linkId}','active')" class="text-[12px] font-semibold text-emerald-600 hover:text-emerald-800 px-2 py-1 rounded hover:bg-emerald-50">Activate</button>`;
+        return `<tr><td class="px-4 py-2.5 text-[12px] text-brand-600 font-mono">${escapeHtml(l.shortCode || '')}</td><td class="px-4 py-2.5 text-[12.5px] text-slate-700 truncate max-w-[260px]">${escapeHtml(l.destinationUrl || '')}</td><td class="px-4 py-2.5 text-[12.5px]">${l.flowPageCount || 1}p</td><td class="px-4 py-2.5 text-[13px] font-semibold text-right">${(l.totalValidClicks || 0).toLocaleString()}</td><td class="px-4 py-2.5"><span class="inline-flex px-2 py-0.5 rounded-md text-[11px] font-semibold ring-1 ${statusColor} capitalize">${escapeHtml(l.status)}</span></td><td class="px-4 py-2.5 text-right">${action}</td></tr>`;
+      }).join('');
+    }
+    window.setAdminLinkStatus = async (linkId, status) => {
+      try {
+        await API.patch(`/api/admin/links/${linkId}/status`, { status });
+        showToast('Link status updated');
+        await loadAdminLinks();
+      } catch (err) { showToast(err.message); }
+    };
+
+    // ── Clicks ──
+    async function loadClicks() {
+      // No dedicated admin clicks endpoint yet — will show a notice.
+      $('clicksTbody').innerHTML = '<tr><td colspan="4" class="px-4 py-8 text-center text-[13px] text-amber-700 bg-amber-50">Admin click aggregation endpoint (<code>/api/admin/clicks</code>) not yet implemented. See limitations.</td></tr>';
+    }
+
+    // ── Journeys ──
+    async function loadJourneys() {
+      const res = await API.get('/api/admin/settings');
+      const s = res.settings || {};
+      const ef = s.enabledFlows || { 1: true, 2: true, 3: true, 4: true };
+      document.querySelectorAll('[data-flow]').forEach(cb => { cb.checked = !!ef[cb.dataset.flow]; });
+    }
+    $('saveFlowsBtn').addEventListener('click', async () => {
+      const ef = { 1:false, 2:false, 3:false, 4:false };
+      document.querySelectorAll('[data-flow]').forEach(cb => { ef[cb.dataset.flow] = cb.checked; });
+      try {
+        await API.patch('/api/admin/settings', { enabledFlows: ef });
+        showToast('Flow settings saved');
+      } catch (err) { showToast(err.message); }
+    });
+
+    // ── Ads ──
+    async function loadAds() {
+      const res = await API.get('/api/admin/ad-placements');
+      const byPage = {};
+      (res.placements || []).forEach(p => { byPage[p.id] = p; });
+      for (const n of [1,2,3,4]) {
+        const p = byPage['page' + n];
+        $(`adPage${n}`).value = p?.html || '';
+        $(`adPage${n}Enabled`).checked = !!p?.enabled;
+      }
+    }
+    $('saveAdsBtn').addEventListener('click', async () => {
+      try {
+        for (const n of [1,2,3,4]) {
+          await API.fetch(`/api/admin/ad-placements/${n}`, {
+            method: 'PUT',
+            body: JSON.stringify({ html: $(`adPage${n}`).value, enabled: $(`adPage${n}Enabled`).checked })
+          });
+        }
+        showToast('Ad placements saved');
+      } catch (err) { showToast(err.message); }
+    });
+
+    // ── Rates / Settings ──
+    async function loadRates() {
+      const res = await API.get('/api/admin/settings');
+      const s = res.settings || {};
+      const fr = s.flowRates || {};
+      $('flowRate1').value = microToDollars(fr['1']).toFixed(2);
+      $('flowRate2').value = microToDollars(fr['2']).toFixed(2);
+      $('flowRate3').value = microToDollars(fr['3']).toFixed(2);
+      $('flowRate4').value = microToDollars(fr['4']).toFixed(2);
+      $('defaultRateInput').value = microToDollars(s.defaultRateMicro).toFixed(2);
+      $('publisherShare').value = s.publisherSharePercent ?? 99;
+      $('referralPercent').value = s.referralPercent ?? 10;
+      $('minWithdrawal').value = microToDollars(s.minWithdrawalMicro).toFixed(2);
+      $('currencyInput').value = s.currency || 'USD';
+      // global
+      $('globalPublisherShare').value = s.publisherSharePercent ?? 99;
+      $('globalReferralPercent').value = s.referralPercent ?? 10;
+      $('globalCurrency').value = s.currency || 'USD';
+      $('globalMinWithdrawal').value = microToDollars(s.minWithdrawalMicro).toFixed(2);
+    }
+    $('saveRatesBtn').addEventListener('click', async () => {
+      const payload = {
+        flowRates: {
+          1: dollarsToMicro($('flowRate1').value),
+          2: dollarsToMicro($('flowRate2').value),
+          3: dollarsToMicro($('flowRate3').value),
+          4: dollarsToMicro($('flowRate4').value)
+        },
+        defaultRateMicro: dollarsToMicro($('defaultRateInput').value),
+        publisherSharePercent: Number($('publisherShare').value),
+        referralPercent: Number($('referralPercent').value),
+        minWithdrawalMicro: dollarsToMicro($('minWithdrawal').value),
+        currency: $('currencyInput').value.trim() || 'USD'
+      };
+      try {
+        await API.patch('/api/admin/settings', payload);
+        showToast('Settings saved');
+      } catch (err) { showToast(err.message); }
+    });
+    $('saveGlobalBtn').addEventListener('click', async () => {
+      const payload = {
+        publisherSharePercent: Number($('globalPublisherShare').value),
+        referralPercent: Number($('globalReferralPercent').value),
+        currency: $('globalCurrency').value.trim() || 'USD',
+        minWithdrawalMicro: dollarsToMicro($('globalMinWithdrawal').value)
+      };
+      try {
+        await API.patch('/api/admin/settings', payload);
+        showToast('Global settings saved');
+      } catch (err) { showToast(err.message); }
+    });
+
+    // ── Withdrawals ──
+    $('withdrawalsFilter').addEventListener('change', () => loadWithdrawals());
+    async function loadWithdrawals() {
+      const status = $('withdrawalsFilter').value;
+      const q = status ? `?status=${status}` : '';
+      const res = await API.get('/api/admin/withdrawals' + q);
+      const list = res.withdrawals || [];
+      if (!list.length) {
+        $('adminWithdrawalsTbody').innerHTML = '<tr><td colspan="6" class="px-4 py-8 text-center text-[13px] text-slate-400">No withdrawals.</td></tr>';
+        return;
+      }
+      $('adminWithdrawalsTbody').innerHTML = list.map(w => {
+        const sc = w.status === 'paid' ? 'bg-emerald-50 text-emerald-700 ring-emerald-200' : w.status === 'rejected' ? 'bg-red-50 text-red-700 ring-red-200' : 'bg-amber-50 text-amber-700 ring-amber-200';
+        const actions = [];
+        if (w.status === 'pending') {
+          actions.push(`<button onclick="withdrawalAction('${w.requestId}','approve')" class="text-[12px] font-semibold text-emerald-600 hover:text-emerald-800 px-2 py-1 rounded hover:bg-emerald-50">Approve</button>`);
+          actions.push(`<button onclick="withdrawalAction('${w.requestId}','reject')" class="text-[12px] font-semibold text-red-600 hover:text-red-800 px-2 py-1 rounded hover:bg-red-50">Reject</button>`);
+        }
+        if (w.status === 'approved' || w.status === 'processing') {
+          actions.push(`<button onclick="withdrawalAction('${w.requestId}','paid')" class="text-[12px] font-semibold text-brand-600 hover:text-brand-800 px-2 py-1 rounded hover:bg-brand-50">Mark Paid</button>`);
+        }
+        return `<tr><td class="px-4 py-2.5 text-[12.5px] text-slate-600">${fmtDate(w.requestedAt)}</td><td class="px-4 py-2.5 text-[11px] text-slate-500 font-mono">${escapeHtml(w.ownerUid || '').slice(0, 10)}…</td><td class="px-4 py-2.5 text-[12.5px] uppercase">${escapeHtml(w.paymentMethod)}</td><td class="px-4 py-2.5 text-[13px] font-semibold text-right">${fmtMoney(w.amountMicro)}</td><td class="px-4 py-2.5"><span class="inline-flex px-2 py-0.5 rounded-md text-[11px] font-semibold ring-1 ${sc} capitalize">${escapeHtml(w.status)}</span></td><td class="px-4 py-2.5 text-right">${actions.join(' ')}</td></tr>`;
+      }).join('');
+    }
+    window.withdrawalAction = async (id, action) => {
+      try {
+        await API.patch(`/api/admin/withdrawals/${id}`, { action });
+        showToast(`Withdrawal ${action}`);
+        await loadWithdrawals();
+      } catch (err) { showToast(err.message); }
+    };
+
+    // ── Logs ──
+    async function loadLogs() {
+      const res = await API.get('/api/admin/logs');
+      const logs = res.logs || [];
+      if (!logs.length) {
+        $('logsTbody').innerHTML = '<tr><td colspan="4" class="px-4 py-8 text-center text-[13px] text-slate-400">No logs.</td></tr>';
+        return;
+      }
+      $('logsTbody').innerHTML = logs.map(l => `<tr><td class="px-4 py-2.5 text-[12px] text-slate-600">${fmtDate(l.createdAt)}</td><td class="px-4 py-2.5 text-[11px] font-mono text-slate-500">${escapeHtml(l.adminUid || '').slice(0, 10)}…</td><td class="px-4 py-2.5 text-[12.5px] font-semibold text-slate-800">${escapeHtml(l.action)}</td><td class="px-4 py-2.5 text-[12px] text-slate-600 truncate max-w-[200px]">${escapeHtml(l.targetId || '—')}</td></tr>`).join('');
+    }
+
+    // Mobile sidebar toggle
+    $('hamburgerBtn').addEventListener('click', () => {
+      const sb = $('sidebar');
+      sb.classList.toggle('hidden');
+      sb.classList.toggle('fixed');
+      sb.classList.toggle('inset-y-0');
+      sb.classList.toggle('left-0');
+      sb.classList.toggle('z-40');
+    });
+  </script>
+</body>
+</html>

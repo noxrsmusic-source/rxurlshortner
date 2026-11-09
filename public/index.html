@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RX URL Shorter — High Paying Link Shortener</title>
+  <meta name="description" content="RX URL Shorter pays 99% profit share with no fixed CPM limits. Earn up to $5 per 1000 clicks, plus 10% lifetime referral commission." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        fontFamily: { sans: ['Inter', 'sans-serif'] },
+        colors: { brand: { 50:'#EFF6FF',100:'#DBEAFE',200:'#BFDBFE',300:'#93C5FD',400:'#60A5FA',500:'#3B82F6',600:'#2563EB',700:'#1D4ED8',800:'#1E40AF',900:'#1E3A8A',950:'#172554' } },
+        boxShadow: { soft:'0 4px 24px -6px rgba(15,23,42,0.08)', card:'0 1px 2px 0 rgba(15,23,42,0.04), 0 1px 3px 0 rgba(15,23,42,0.06)' }
+      }}
+    }
+  </script>
+  <style>
+    html{scroll-behavior:smooth}body{font-family:'Inter',sans-serif}
+    .modal-blur{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+    .no-scroll{overflow:hidden}
+    .fade-in{animation:fadeIn .25s ease-out}@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    .spin{animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+    .modal-scroll::-webkit-scrollbar{width:6px}.modal-scroll::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:3px}
+    .slide-in{animation:slideIn .25s ease-out}@keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+    .slide-out{animation:slideOut .2s ease-in forwards}@keyframes slideOut{from{transform:translateX(0)}to{transform:translateX(100%)}}
+    .prose-legal h3{font-weight:700;color:#0f172a;margin-top:1.25rem;margin-bottom:.5rem;font-size:.95rem}
+    .prose-legal p,.prose-legal li{color:#475569;font-size:.875rem;line-height:1.65}
+    .prose-legal ul{list-style:disc;padding-left:1.25rem;margin-top:.5rem}
+    .prose-legal ul li{margin-bottom:.25rem}
+    .copy-toast{animation:toastIn .25s ease-out}@keyframes toastIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+  </style>
+</head>
+<body class="bg-white text-slate-900 antialiased">
+
+  <header class="sticky top-0 z-40 bg-brand-600/95 backdrop-blur-md border-b border-brand-700/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-5 lg:px-8">
+      <nav class="flex items-center justify-between h-16">
+        <a href="#top" class="flex items-center gap-2 text-white font-bold text-[15px] tracking-tight shrink-0">
+          <span class="inline-flex items-center justify-center w-7 h-7 rounded-md bg-white/15 ring-1 ring-white/20">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          </span>
+          <span>RX URL Shorter</span>
+        </a>
+        <div class="hidden md:flex items-center gap-7 text-[13.5px] font-medium">
+          <a href="#features" class="text-brand-100 hover:text-white transition-colors">Features</a>
+          <a href="#rates" class="text-brand-100 hover:text-white transition-colors">Payout Rates</a>
+          <a href="#referral" class="text-brand-100 hover:text-white transition-colors">Referral</a>
+          <a href="#how" class="text-brand-100 hover:text-white transition-colors">How It Works</a>
+          <a href="#faq" class="text-brand-100 hover:text-white transition-colors">FAQ</a>
+        </div>
+        <div class="hidden md:flex items-center gap-2.5">
+          <button id="dashboardBtn" class="inline-flex items-center gap-1.5 text-[13.5px] font-medium text-brand-100 hover:text-white px-3 py-2 rounded-md transition-colors">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+            Dashboard
+          </button>
+          <button id="signInBtn" class="inline-flex items-center gap-1.5 bg-white text-brand-700 hover:bg-brand-50 text-[13.5px] font-semibold px-4 py-2 rounded-md transition-colors shadow-sm">
+            Sign In
+          </button>
+          <div id="userMenu" class="hidden items-center gap-2.5">
+            <a id="dashLink" href="/dashboard.html" class="inline-flex items-center gap-1.5 bg-white text-brand-700 hover:bg-brand-50 text-[13.5px] font-semibold px-4 py-2 rounded-md transition-colors shadow-sm">Dashboard</a>
+            <div class="relative">
+              <button id="userBtn" class="flex items-center gap-2 text-white/95 text-[13px] font-medium pl-1 pr-2 py-1 rounded-md hover:bg-white/10 transition-colors">
+                <img id="userAvatar" class="w-7 h-7 rounded-full ring-2 ring-white/30" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-4.42 0-8 2.24-8 5v1h16v-1c0-2.76-3.58-5-8-5z'/%3E%3C/svg%3E" alt="">
+                <span id="userName" class="hidden lg:inline max-w-[120px] truncate">User</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div id="userDropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg ring-1 ring-slate-200 py-1.5 fade-in">
+                <div class="px-3.5 py-2 border-b border-slate-100">
+                  <p class="text-[11px] uppercase tracking-wide text-slate-400 font-semibold">Signed in as</p>
+                  <p id="userEmail" class="text-[13px] text-slate-700 truncate font-medium"></p>
+                </div>
+                <a id="dashLink2" href="/dashboard.html" class="flex items-center gap-2 px-3.5 py-2 text-[13px] text-slate-700 hover:bg-slate-50">Dashboard</a>
+                <button id="signOutBtn" class="w-full flex items-center gap-2 px-3.5 py-2 text-[13px] text-red-600 hover:bg-red-50 text-left">Sign Out</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button id="hamburgerBtn" class="md:hidden inline-flex items-center justify-center w-10 h-10 rounded-md text-white hover:bg-white/10 transition-colors" aria-label="Open menu">
+          <svg id="hamburgerIcon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+          <svg id="closeIcon" class="hidden" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </nav>
+    </div>
+    <div id="mobileMenu" class="hidden md:hidden fixed inset-0 top-16 z-50 bg-slate-900/40" style="height:calc(100vh - 4rem);">
+      <div id="mobileMenuPanel" class="absolute right-0 top-0 h-full w-[85%] max-w-sm bg-white shadow-2xl slide-in overflow-y-auto modal-scroll">
+        <div class="p-5">
+          <div id="mobileUserBox" class="hidden mb-5 p-4 rounded-xl bg-slate-50 ring-1 ring-slate-200">
+            <p id="mobileUserName" class="text-[14px] font-semibold text-slate-900 truncate">User</p>
+            <p id="mobileUserEmail" class="text-[12px] text-slate-500 truncate"></p>
+          </div>
+          <nav class="flex flex-col gap-0.5">
+            <a href="#features" class="mobile-link px-3 py-3 rounded-lg text-[15px] font-medium text-slate-700 hover:bg-slate-50">Features</a>
+            <a href="#rates" class="mobile-link px-3 py-3 rounded-lg text-[15px] font-medium text-slate-700 hover:bg-slate-50">Payout Rates</a>
+            <a href="#referral" class="mobile-link px-3 py-3 rounded-lg text-[15px] font-medium text-slate-700 hover:bg-slate-50">Referral Program</a>
+            <a href="#how" class="mobile-link px-3 py-3 rounded-lg text-[15px] font-medium text-slate-700 hover:bg-slate-50">How It Works</a>
+            <a href="#faq" class="mobile-link px-3 py-3 rounded-lg text-[15px] font-medium text-slate-700 hover:bg-slate-50">FAQ</a>
+          </nav>
+          <div class="my-4 h-px bg-slate-100"></div>
+          <div class="flex flex-col gap-2.5">
+            <button id="mobileSignInBtn" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold text-[14px] py-2.5 rounded-lg">Sign In</button>
+            <button id="mobileSignUpBtn" class="w-full bg-white ring-1 ring-slate-200 hover:bg-slate-50 text-slate-800 font-semibold text-[14px] py-2.5 rounded-lg">Create Free Account</button>
+            <button id="mobileSignOutBtn" class="hidden w-full bg-red-50 hover:bg-red-100 text-red-600 font-semibold text-[14px] py-2.5 rounded-lg">Sign Out</button>
+          </div>
+          <div class="my-4 h-px bg-slate-100"></div>
+          <div class="flex items-center gap-4 text-[13px] text-slate-500">
+            <button class="open-terms hover:text-slate-800">Terms</button>
+            <button class="open-privacy hover:text-slate-800">Privacy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="top" class="bg-brand-600 text-white overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-5 lg:px-8 pt-12 sm:pt-16 pb-16 sm:pb-20 lg:pt-20 lg:pb-28">
+      <div class="grid lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+        <div class="lg:col-span-6">
+          <span class="inline-flex items-center gap-2 bg-white/10 ring-1 ring-white/20 text-brand-50 text-[11.5px] sm:text-[12px] font-medium px-3 py-1.5 rounded-full">
+            <span class="relative flex h-1.5 w-1.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-400"></span>
+            </span>
+            The highest-paying link shortener worldwide
+          </span>
+          <h1 class="mt-6 text-[34px] sm:text-[42px] lg:text-[56px] leading-[1.08] font-extrabold tracking-tight">Earn up to <span id="heroRate">$5</span> per 1000 clicks</h1>
+          <p class="mt-5 text-[15px] sm:text-[16.5px] leading-relaxed text-brand-100 max-w-xl">with the world's <span class="text-brand-100">highest-paying</span> link shortener.</p>
+          <div class="mt-5 flex items-start gap-3 max-w-xl p-3.5 rounded-xl bg-white/10 ring-1 ring-white/20">
+            <span class="shrink-0 inline-flex items-center justify-center w-7 h-7 rounded-md bg-emerald-400/20 ring-1 ring-emerald-400/30 text-emerald-200">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-3-3.87"/><path d="M9 21v-2a4 4 0 0 1 3-3.87"/><circle cx="9" cy="7" r="4"/><circle cx="17" cy="7" r="4"/></svg>
+            </span>
+            <p class="text-[13px] sm:text-[13.5px] text-brand-50 leading-relaxed">
+              <strong class="text-white font-semibold">Referral Program.</strong> Invite friends and earn <strong class="text-white font-semibold" id="referralPctHero">10%</strong> of their lifetime earnings — forever.
+            </p>
+          </div>
+          <div class="mt-7 flex flex-wrap items-center gap-3">
+            <button id="heroCta" class="inline-flex items-center gap-2 bg-white text-brand-700 hover:bg-brand-50 font-semibold text-[14.5px] px-6 py-3 rounded-lg transition-colors shadow-sm">
+              Start Earning — Create Account
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+            <a href="#rates" class="inline-flex items-center gap-2 text-white/95 hover:text-white font-medium text-[14.5px] px-5 py-3 rounded-lg ring-1 ring-white/25 hover:ring-white/50 transition-all">View Payout Rates</a>
+          </div>
+          <div class="mt-9 grid grid-cols-3 max-w-md divide-x divide-white/15">
+            <div class="pr-4"><div class="text-xl sm:text-2xl font-bold" id="statShare">99%</div><div class="text-[11px] sm:text-[12px] text-brand-100 mt-0.5">Profit share to you</div></div>
+            <div class="px-4"><div class="text-xl sm:text-2xl font-bold" id="statTier1">$5.00</div><div class="text-[11px] sm:text-[12px] text-brand-100 mt-0.5">Tier 1 per 1000</div></div>
+            <div class="pl-4"><div class="text-xl sm:text-2xl font-bold" id="statReferral">10%</div><div class="text-[11px] sm:text-[12px] text-brand-100 mt-0.5">Referral commission</div></div>
+          </div>
+        </div>
+        <div class="lg:col-span-6 flex justify-center lg:justify-end">
+          <div class="w-full max-w-[520px] bg-brand-950 rounded-2xl ring-1 ring-white/10 shadow-2xl shadow-black/40 p-4 sm:p-5">
+            <div class="flex items-center gap-1.5 mb-4">
+              <span class="w-2.5 h-2.5 rounded-full bg-red-400"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-green-400"></span>
+              <span class="ml-3 text-[11px] text-brand-200 font-medium truncate">rxurlshorter.com / dashboard</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2 sm:gap-3">
+              <div class="bg-white/5 rounded-lg p-3 sm:p-3.5 ring-1 ring-white/10"><div class="text-base sm:text-lg font-bold text-white">—</div><div class="text-[10px] sm:text-[10.5px] uppercase tracking-wide text-brand-200 mt-0.5 font-semibold">Links</div></div>
+              <div class="bg-white/5 rounded-lg p-3 sm:p-3.5 ring-1 ring-white/10"><div class="text-base sm:text-lg font-bold text-white">—</div><div class="text-[10px] sm:text-[10.5px] uppercase tracking-wide text-brand-200 mt-0.5 font-semibold">Clicks</div></div>
+              <div class="bg-white/5 rounded-lg p-3 sm:p-3.5 ring-1 ring-white/10"><div class="text-base sm:text-lg font-bold text-emerald-300">—</div><div class="text-[10px] sm:text-[10.5px] uppercase tracking-wide text-brand-200 mt-0.5 font-semibold">Earned</div></div>
+            </div>
+            <div class="mt-4 bg-white/5 rounded-lg p-3 sm:p-4 ring-1 ring-white/10">
+              <svg viewBox="0 0 400 100" preserveAspectRatio="none" class="w-full h-24 sm:h-28">
+                <defs><linearGradient id="areaFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#60A5FA" stop-opacity="0.35"/><stop offset="100%" stop-color="#60A5FA" stop-opacity="0"/></linearGradient></defs>
+                <path d="M0,85 Q80,75 160,55 T320,25 T400,10 L400,100 L0,100 Z" fill="url(#areaFill)"/>
+                <path d="M0,85 Q80,75 160,55 T320,25 T400,10" fill="none" stroke="#93C5FD" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>
+              <div class="flex items-center justify-between text-[10.5px] sm:text-[11px] text-brand-200 mt-1"><span>Sample payout growth</span><span class="text-emerald-300 font-semibold">↑</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features" class="py-16 sm:py-20 lg:py-24 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-5 lg:px-8">
+      <div class="max-w-2xl">
+        <p class="text-[12px] sm:text-[12.5px] uppercase tracking-widest text-brand-600 font-bold">Why RX URL Shorter</p>
+        <h2 class="mt-2.5 text-[26px] sm:text-3xl lg:text-[40px] font-extrabold tracking-tight leading-tight text-slate-900">Built like a partner, not a middleman.</h2>
+        <p class="mt-4 text-slate-500 text-[14.5px] sm:text-[15.5px] leading-relaxed">Most shorteners pocket the difference between what advertisers pay and what they pay you. We don't. You keep 99% of every dollar your traffic generates.</p>
+      </div>
+      <div class="mt-10 sm:mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        <div class="bg-white rounded-xl p-5 sm:p-6 ring-1 ring-slate-200 shadow-card"><div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center mb-4 ring-1 ring-brand-100"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><h3 class="text-[15.5px] font-bold text-slate-900">99% Profit Share</h3><p class="mt-2 text-[13.5px] text-slate-500 leading-relaxed">We charge only a 1% platform fee — the smallest cut in the industry.</p></div>
+        <div class="bg-white rounded-xl p-5 sm:p-6 ring-1 ring-slate-200 shadow-card"><div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4 ring-1 ring-emerald-100"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-3-3.87"/><path d="M9 21v-2a4 4 0 0 1 3-3.87"/><circle cx="9" cy="7" r="4"/><circle cx="17" cy="7" r="4"/></svg></div><h3 class="text-[15.5px] font-bold text-slate-900">Lifetime Referral</h3><p class="mt-2 text-[13.5px] text-slate-500 leading-relaxed">Invite friends. Earn <span id="referralPctFeature">10%</span> of everything they make — for life.</p></div>
+        <div class="bg-white rounded-xl p-5 sm:p-6 ring-1 ring-slate-200 shadow-card"><div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center mb-4 ring-1 ring-brand-100"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg></div><h3 class="text-[15.5px] font-bold text-slate-900">No Fixed CPM</h3><p class="mt-2 text-[13.5px] text-slate-500 leading-relaxed">You earn the real value of your traffic, tier by tier.</p></div>
+        <div class="bg-white rounded-xl p-5 sm:p-6 ring-1 ring-slate-200 shadow-card"><div class="w-10 h-10 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center mb-4 ring-1 ring-brand-100"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div><h3 class="text-[15.5px] font-bold text-slate-900">Country-Wise Payouts</h3><p class="mt-2 text-[13.5px] text-slate-500 leading-relaxed">Higher payouts for higher-value geographies.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="referral" class="py-16 sm:py-20 lg:py-24 bg-white border-t border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-5 lg:px-8">
+      <div class="grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+        <div class="lg:col-span-6">
+          <p class="text-[12px] sm:text-[12.5px] uppercase tracking-widest text-emerald-600 font-bold">Referral Program</p>
+          <h2 class="mt-2.5 text-[26px] sm:text-3xl lg:text-[40px] font-extrabold tracking-tight leading-tight text-slate-900">Refer friends. Earn <span class="text-emerald-600" id="referralPctSection">10%</span> of their lifetime earnings — forever.</h2>
+          <p class="mt-4 text-slate-500 text-[14.5px] sm:text-[15.5px] leading-relaxed">Share your personal referral link. When someone signs up with it, you earn <strong class="text-slate-800" id="referralPctBody">10% of everything they ever make</strong> on RX URL Shorter — for as long as they use the platform.</p>
+          <div class="mt-7 space-y-4">
+            <div class="flex items-start gap-3.5"><div class="shrink-0 w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center ring-1 ring-emerald-100 font-bold text-[13px]">1</div><div><h3 class="text-[15px] font-bold text-slate-900">Share your unique referral link</h3><p class="mt-0.5 text-[13.5px] text-slate-500 leading-relaxed">Find it in your dashboard. Post it anywhere.</p></div></div>
+            <div class="flex items-start gap-3.5"><div class="shrink-0 w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center ring-1 ring-emerald-100 font-bold text-[13px]">2</div><div><h3 class="text-[15px] font-bold text-slate-900">They join and start earning</h3><p class="mt-0.5 text-[13.5px] text-slate-500 leading-relaxed">They're permanently tagged as your referral.</p></div></div>
+            <div class="flex items-start gap-3.5"><div class="shrink-0 w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center ring-1 ring-emerald-100 font-bold text-[13px]">3</div><div><h3 class="text-[15px] font-bold text-slate-900">You get 10% — for life</h3><p class="mt-0.5 text-[13.5px] text-slate-500 leading-relaxed">Every time they earn a dollar, 10 cents lands in your account automatically.</p></div></div>
+          </div>
+        </div>
+        <div class="lg:col-span-6">
+          <div class="rounded-2xl ring-1 ring-slate-200 shadow-soft overflow-hidden">
+            <div class="bg-slate-900 text-white p-5 sm:p-6">
+              <div class="flex items-center gap-2"><span class="inline-flex items-center justify-center w-7 h-7 rounded-md bg-white/10 ring-1 ring-white/20"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-3-3.87"/><path d="M9 21v-2a4 4 0 0 1 3-3.87"/><circle cx="9" cy="7" r="4"/><circle cx="17" cy="7" r="4"/></svg></span><span class="text-[13px] font-semibold">Referral Earnings Calculator</span></div>
+              <div class="mt-5 grid grid-cols-2 gap-3">
+                <div><label class="block text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">Referrals</label><input id="refUsers" type="number" value="10" min="0" max="100000" class="w-full px-3 py-2.5 rounded-lg bg-white/5 ring-1 ring-white/15 text-white text-[14px] outline-none" /></div>
+                <div><label class="block text-[11px] font-semibold uppercase tracking-wide text-slate-400 mb-1.5">Their avg. monthly earnings ($)</label><input id="refAvg" type="number" value="300" min="0" class="w-full px-3 py-2.5 rounded-lg bg-white/5 ring-1 ring-white/15 text-white text-[14px] outline-none" /></div>
+              </div>
+              <div class="mt-5 pt-5 border-t border-white/10 flex items-end justify-between">
+                <div><p class="text-[11px] uppercase tracking-wide text-slate-400 font-semibold">Your monthly commission</p><p class="mt-0.5 text-[11px] text-slate-500"><span id="refCalcPct">10%</span> of their total earnings</p></div>
+                <div class="text-right"><span id="refOutput" class="text-[28px] sm:text-[32px] font-extrabold text-emerald-400">$0</span><span class="text-slate-400 text-[13px]">/mo</span></div>
+              </div>
+              <div class="mt-3 pt-3 border-t border-white/10 flex items-center justify-between text-[12px]"><span class="text-slate-400">Lifetime value (5 yrs)</span><span id="refLifetime" class="text-emerald-400 font-bold">$0</span></div>
+            </div>
+            <div class="bg-white p-5 sm:p-6">
+              <p class="text-[12.5px] font-semibold text-slate-700 mb-2">Your referral link</p>
+              <div class="flex items-center gap-2">
+                <input id="refLinkInput" type="text" readonly value="Sign in to see your link" class="flex-1 px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-[13px] text-slate-700 outline-none" />
+                <button id="copyRefBtn" class="inline-flex items-center gap-1.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-[13px] px-4 py-2.5 rounded-lg whitespace-nowrap">Copy</button>
+              </div>
+              <p class="mt-3 text-[12px] text-slate-500 leading-relaxed"><button class="open-signup text-brand-600 font-semibold hover:text-brand-700">Create a free account →</button> to get your real referral link.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="rates" class="py-16 sm:py-20 lg:py-24 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-5 lg:px-8">
+      <div class="max-w-2xl">
+        <p class="text-[12px] sm:text-[12.5px] uppercase tracking-widest text-brand-600 font-bold">Estimated Payout Rates</p>
+        <h2 class="mt-2.5 text-[26px] sm:text-3xl lg:text-[40px] font-extrabold tracking-tight leading-tight text-slate-900">Country-tiered earnings, per 1000 clicks.</h2>
+        <p class="mt-4 text-slate-500 text-[14.5px] sm:text-[15.5px] leading-relaxed">Your earnings depend on where your traffic comes from. Actual rates are configured by admin and shown live.</p>
+      </div>
+      <div class="mt-10 grid sm:grid-cols-3 gap-4">
+        <div class="rounded-xl ring-1 ring-slate-200 bg-white p-5">
+          <div class="flex items-center justify-between"><span class="text-[12px] font-bold uppercase tracking-wider text-emerald-700">Tier 1</span><span class="text-[11px] text-slate-400">Highest value</span></div>
+          <div class="mt-3 flex items-baseline gap-1"><span id="tier1Rate" class="text-2xl sm:text-3xl font-extrabold text-slate-900">—</span><span class="text-slate-400 text-[13px]">/ 1000</span></div>
+          <p class="mt-2 text-[13px] text-slate-500">USA, UK, Canada, Australia, Germany, Nordics & more</p>
+        </div>
+        <div class="rounded-xl ring-1 ring-slate-200 bg-white p-5">
+          <div class="flex items-center justify-between"><span class="text-[12px] font-bold uppercase tracking-wider text-brand-700">Tier 2</span><span class="text-[11px] text-slate-400">Mid value</span></div>
+          <div class="mt-3 flex items-baseline gap-1"><span id="tier2Rate" class="text-2xl sm:text-3xl font-extrabold text-slate-900">—</span><span class="text-slate-400 text-[13px]">/ 1000</span></div>
+          <p class="mt-2 text-[13px] text-slate-500">UAE, Saudi Arabia, France, Italy, Spain, Japan & more</p>
+        </div>
+        <div class="rounded-xl ring-1 ring-slate-200 bg-white p-5">
+          <div class="flex items-center justify-between"><span class="text-[12px] font-bold uppercase tracking-wider text-amber-700">Tier 3</span><span class="text-[11px] text-slate-400">Emerging</span></div>
+          <div class="mt-3 flex items-baseline gap-1"><span id="tier3Rate" class="text-2xl sm:text-3xl font-extrabold text-slate-900">—</span><span class="text-slate-400 text-[13px]">/ 1000</span></div>
+          <p class="mt-2 text-[13px] text-slate-500">India, Brazil, Mexico, Indonesia, Philippines & more</p>
+        </div>
+      </div>
+      <div class="mt-10">
+        <label for="countrySearch" class="block text-[13px] font-semibold text-slate-700 mb-2">Find your country's rate</label>
+        <div class="relative">
+          <input id="countrySearch" type="text" autocomplete="off" placeholder="Start typing your country name…" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-500 outline-none text-[14.5px] bg-white" />
+        </div>
+        <div id="searchResult" class="hidden mt-3"></div>
+      </div>
+      <div class="mt-6 overflow-hidden rounded-xl ring-1 ring-slate-200 bg-white">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left min-w-[520px]">
+            <thead class="bg-slate-50 border-b border-slate-200">
+              <tr><th class="px-4 sm:px-5 py-3.5 text-[11.5px] font-bold uppercase tracking-wider text-slate-500">Country</th><th class="px-4 sm:px-5 py-3.5 text-[11.5px] font-bold uppercase tracking-wider text-slate-500">Tier</th><th class="px-4 sm:px-5 py-3.5 text-[11.5px] font-bold uppercase tracking-wider text-slate-500 text-right">Per 1,000 Clicks</th></tr>
+            </thead>
+            <tbody id="ratesTableBody" class="divide-y divide-slate-100"><tr><td colspan="3" class="px-5 py-10 text-center text-[13px] text-slate-400">Loading rates…</td></tr></tbody>
+          </table>
+        </div>
+        <div id="noResults" class="hidden px-5 py-10 text-center">
+          <p class="text-[14px] font-semibold text-slate-700">No matching country in the tiered list</p>
+          <p class="text-[13px] text-slate-500 mt-1">Default rate below applies.</p>
+        </div>
+      </div>
+      <div class="mt-4 rounded-xl ring-1 ring-amber-200 bg-amber-50/60 p-5">
+        <h3 class="text-[14.5px] font-bold text-slate-900">Don't see your country?</h3>
+        <p class="mt-1 text-[13.5px] text-slate-600 leading-relaxed">We still pay <strong id="defaultRate" class="text-slate-900">$1.00</strong> per 1,000 clicks as our default rate. Traffic from unlisted regions is still monetized.</p>
+      </div>
+      <div class="mt-5 rounded-xl bg-white ring-1 ring-slate-200 p-5">
+        <h3 class="text-[14px] font-bold text-slate-900">Important: estimated rates, not a fixed CPM</h3>
+        <p class="mt-1 text-[13px] text-slate-600 leading-relaxed">The rates shown are <strong class="text-slate-800">estimates</strong>, not a guaranteed fixed CPM. Actual earnings can be <strong class="text-emerald-700">higher</strong> depending on advertiser demand, traffic quality, and seasonality. Actual ad revenue is not currently reported by a network integration — earnings are marked "estimated".</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-16 sm:py-20 lg:py-24 bg-brand-600 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-5 lg:px-8 grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
+      <div>
+        <p class="text-[12px] sm:text-[12.5px] uppercase tracking-widest text-brand-100 font-bold">Our Promise</p>
+        <h2 class="mt-2.5 text-[26px] sm:text-3xl lg:text-[40px] font-extrabold tracking-tight leading-tight">We take <span class="text-brand-100">1%</span>. You keep <span class="text-brand-100" id="profitShareBig">99%</span>.</h2>
+        <p class="mt-5 text-[14.5px] sm:text-[16px] leading-relaxed text-brand-100 max-w-xl">RX URL Shorter was built on a simple belief: publishers should keep the money their traffic earns.</p>
+      </div>
+      <div class="lg:justify-self-end w-full max-w-md">
+        <div class="bg-white text-slate-900 rounded-2xl p-5 sm:p-6 shadow-2xl">
+          <div class="flex items-center justify-between"><h3 class="font-bold text-[15px]">Earnings Estimator</h3><span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200">Live</span></div>
+          <div class="mt-5 space-y-4">
+            <div><label class="text-[12px] font-semibold uppercase tracking-wide text-slate-500">Clicks (per month)</label><input id="estClicks" type="number" value="100000" min="0" class="mt-1.5 w-full px-3.5 py-2.5 rounded-lg border border-slate-200 outline-none text-[14px]" /></div>
+            <div><label class="text-[12px] font-semibold uppercase tracking-wide text-slate-500">Primary traffic tier</label><select id="estTier" class="mt-1.5 w-full px-3.5 py-2.5 rounded-lg border border-slate-200 outline-none text-[14px] bg-white"><option value="tier1">Tier 1</option><option value="tier2">Tier 2</option><option value="tier3">Tier 3</option><option value="default">Other / default</option></select></div>
+          </div>
+          <div class="mt-5 pt-5 border-t border-slate-100">
+            <div class="flex items-baseline justify-between"><span class="text-[13px] text-slate-500">Estimated monthly earnings</span><span class="text-[13px] text-slate-400"><span id="estShare">99%</span> to you</span></div>
+            <div class="mt-1.5 flex items-baseline gap-1"><span id="estOutput" class="text-[26px] sm:text-3xl font-extrabold text-brand-600">$—</span><span class="text-slate-400 text-[13px]">/ month</span></div>
+            <p class="mt-2 text-[11.5px] text-slate-400 leading-relaxed">Estimate only — actual earnings depend on real ad revenue.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how" class="py-16 sm:py-20 lg:py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-5 lg:px-8">
+      <div class="max-w-2xl"><p class="text-[12px] sm:text-[12.5px] uppercase tracking-widest text-brand-600 font-bold">How it works</p><h2 class="mt-2.5 text-[26px] sm:text-3xl lg:text-[40px] font-extrabold tracking-tight leading-tight text-slate-900">Three steps to start earning.</h2></div>
+      <div class="mt-10 sm:mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div><div class="text-[13px] font-bold text-brand-600">STEP 01</div><h3 class="mt-2 text-[17px] sm:text-[18px] font-bold text-slate-900">Create your free account</h3><p class="mt-2 text-[14px] text-slate-500 leading-relaxed">Sign up with email or Google in seconds. No credit card.</p></div>
+        <div><div class="text-[13px] font-bold text-brand-600">STEP 02</div><h3 class="mt-2 text-[17px] sm:text-[18px] font-bold text-slate-900">Shorten and share your links</h3><p class="mt-2 text-[14px] text-slate-500 leading-relaxed">Paste any URL, choose an ad flow (1–4 pages), and share.</p></div>
+        <div><div class="text-[13px] font-bold text-brand-600">STEP 03</div><h3 class="mt-2 text-[17px] sm:text-[18px] font-bold text-slate-900">Get paid for every click</h3><p class="mt-2 text-[14px] text-slate-500 leading-relaxed">Track clicks in real time and withdraw your share.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="py-16 sm:py-20 lg:py-24 bg-slate-50 border-t border-slate-200">
+    <div class="max-w-3xl mx-auto px-4 sm:px-5 lg:px-8">
+      <p class="text-[12px] sm:text-[12.5px] uppercase tracking-widest text-brand-600 font-bold text-center">Frequently asked</p>
+      <h2 class="mt-2.5 text-[26px] sm:text-3xl lg:text-[36px] font-extrabold tracking-tight leading-tight text-slate-900 text-center">Questions, answered.</h2>
+      <div class="mt-10 space-y-3">
+        <details class="group bg-white rounded-lg ring-1 ring-slate-200 p-5"><summary class="cursor-pointer flex items-center justify-between font-semibold text-[14.5px] text-slate-900 list-none">How is 99% profit share different from a fixed CPM?<svg class="text-slate-400 group-open:rotate-180 transition-transform shrink-0 ml-3" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></summary><p class="mt-3 text-[14px] text-slate-500 leading-relaxed">Instead of a low guaranteed rate, we share a large percentage of actual ad revenue. When advertiser rates rise, your earnings rise automatically.</p></details>
+        <details class="group bg-white rounded-lg ring-1 ring-slate-200 p-5"><summary class="cursor-pointer flex items-center justify-between font-semibold text-[14.5px] text-slate-900 list-none">How does the lifetime referral commission work?<svg class="text-slate-400 group-open:rotate-180 transition-transform shrink-0 ml-3" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></summary><p class="mt-3 text-[14px] text-slate-500 leading-relaxed">Every user gets a unique referral link. When someone signs up through it, you permanently earn a percentage of their earnings — for life, no cap.</p></details>
+        <details class="group bg-white rounded-lg ring-1 ring-slate-200 p-5"><summary class="cursor-pointer flex items-center justify-between font-semibold text-[14.5px] text-slate-900 list-none">Why are the rates "estimated" and not fixed?<svg class="text-slate-400 group-open:rotate-180 transition-transform shrink-0 ml-3" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></summary><p class="mt-3 text-[14px] text-slate-500 leading-relaxed">Because actual earnings depend on live advertiser demand, traffic quality, and season. The tier rates are a baseline.</p></details>
+        <details class="group bg-white rounded-lg ring-1 ring-slate-200 p-5"><summary class="cursor-pointer flex items-center justify-between font-semibold text-[14.5px] text-slate-900 list-none">My country isn't in the list. Do I still earn?<svg class="text-slate-400 group-open:rotate-180 transition-transform shrink-0 ml-3" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></summary><p class="mt-3 text-[14px] text-slate-500 leading-relaxed">Yes. Traffic from any country not listed earns the default rate.</p></details>
+        <details class="group bg-white rounded-lg ring-1 ring-slate-200 p-5"><summary class="cursor-pointer flex items-center justify-between font-semibold text-[14.5px] text-slate-900 list-none">When and how do I get paid?<svg class="text-slate-400 group-open:rotate-180 transition-transform shrink-0 ml-3" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></summary><p class="mt-3 text-[14px] text-slate-500 leading-relaxed">Payouts are processed on-demand once you reach the minimum. We support PayPal, USDT, UPI, and bank transfer.</p></details>
+        <details class="group bg-white rounded-lg ring-1 ring-slate-200 p-5"><summary class="cursor-pointer flex items-center justify-between font-semibold text-[14.5px] text-slate-900 list-none">Are there any traffic limits or hidden fees?<svg class="text-slate-400 group-open:rotate-180 transition-transform shrink-0 ml-3" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></summary><p class="mt-3 text-[14px] text-slate-500 leading-relaxed">None. No hidden fees, no forced traffic caps.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-14 sm:py-16 bg-white border-t border-slate-200">
+    <div class="max-w-4xl mx-auto px-4 sm:px-5 lg:px-8 text-center">
+      <h2 class="text-[26px] sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900">Ready to earn more from your links?</h2>
+      <p class="mt-4 text-slate-500 text-[14.5px] sm:text-[15.5px] max-w-xl mx-auto">Join thousands of publishers worldwide.</p>
+      <button id="ctaBtn" class="mt-7 inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-[14.5px] px-6 py-3 rounded-lg">Create Free Account<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+    </div>
+  </section>
+
+  <footer class="bg-slate-900 text-slate-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-5 lg:px-8 py-12 grid sm:grid-cols-2 md:grid-cols-4 gap-8">
+      <div class="sm:col-span-2">
+        <div class="flex items-center gap-2 text-white font-bold text-[15px]"><span class="inline-flex items-center justify-center w-7 h-7 rounded-md bg-brand-600"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>RX URL Shorter</div>
+        <p class="mt-4 text-[13.5px] text-slate-400 max-w-sm leading-relaxed">The highest-paying link shortener.</p>
+      </div>
+      <div><h4 class="text-white text-[13px] font-bold uppercase tracking-wider">Product</h4><ul class="mt-4 space-y-2.5 text-[13.5px]"><li><a href="#features" class="hover:text-white">Features</a></li><li><a href="#rates" class="hover:text-white">Payout Rates</a></li><li><a href="#referral" class="hover:text-white">Referral Program</a></li><li><a href="/dashboard.html" class="hover:text-white">Dashboard</a></li></ul></div>
+      <div><h4 class="text-white text-[13px] font-bold uppercase tracking-wider">Company</h4><ul class="mt-4 space-y-2.5 text-[13.5px]"><li><a href="#faq" class="hover:text-white">FAQ</a></li><li><button class="open-terms hover:text-white">Terms of Service</button></li><li><button class="open-privacy hover:text-white">Privacy Policy</button></li></ul></div>
+    </div>
+    <div class="border-t border-slate-800"><div class="max-w-7xl mx-auto px-4 sm:px-5 lg:px-8 py-5 text-[12.5px] text-slate-500 flex flex-col sm:flex-row justify-between gap-2"><span>© <span id="year"></span> RX URL Shorter. All rights reserved.</span></div></div>
+  </footer>
+
+  <!-- Auth Modal -->
+  <div id="authModal" class="hidden fixed inset-0 z-[100] items-center justify-center p-4 modal-blur bg-slate-900/60">
+    <div class="relative w-full max-w-[440px] max-h-[92vh] overflow-y-auto modal-scroll bg-white rounded-2xl shadow-2xl fade-in">
+      <button id="closeModal" class="absolute top-4 right-4 w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center text-slate-400"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      <div class="p-6 sm:p-7">
+        <div class="flex items-center gap-2"><span class="inline-flex items-center justify-center w-8 h-8 rounded-md bg-brand-600"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span><span class="font-bold text-[15px] text-slate-900">RX URL Shorter</span></div>
+        <h2 id="authTitle" class="mt-6 text-[20px] sm:text-[22px] font-extrabold tracking-tight text-slate-900">Welcome back</h2>
+        <p id="authSubtitle" class="mt-1.5 text-[13.5px] text-slate-500">Sign in to access your dashboard and earnings.</p>
+        <div class="mt-6 grid grid-cols-2 bg-slate-100 rounded-lg p-1">
+          <button id="tabSignIn" data-tab="signin" class="auth-tab py-2 rounded-md text-[13.5px] font-semibold bg-white text-slate-900 shadow-sm">Sign In</button>
+          <button id="tabSignUp" data-tab="signup" class="auth-tab py-2 rounded-md text-[13.5px] font-semibold text-slate-500 hover:text-slate-800">Create Account</button>
+        </div>
+        <div id="authAlert" class="hidden mt-4 text-[13px] px-3.5 py-2.5 rounded-lg"></div>
+        <form id="authForm" class="mt-5 space-y-4">
+          <div id="nameField" class="hidden"><label class="block text-[12.5px] font-semibold text-slate-700 mb-1.5">Full name</label><input id="authName" type="text" autocomplete="name" placeholder="Jane Doe" class="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 outline-none text-[14px]" /></div>
+          <div><label class="block text-[12.5px] font-semibold text-slate-700 mb-1.5">Email address</label><input id="authEmail" type="email" required autocomplete="email" placeholder="you@example.com" class="w-full px-3.5 py-2.5 rounded-lg border border-slate-200 outline-none text-[14px]" /></div>
+          <div><label class="block text-[12.5px] font-semibold text-slate-700 mb-1.5">Password</label><div class="relative"><input id="authPassword" type="password" required minlength="6" placeholder="••••••••" class="w-full px-3.5 py-2.5 pr-10 rounded-lg border border-slate-200 outline-none text-[14px]" /><button type="button" id="togglePassword" class="absolute right-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-md text-slate-400 hover:text-slate-700">👁</button></div></div>
+          <div id="forgotRow" class="flex justify-end"><button type="button" id="forgotBtn" class="text-[12.5px] text-brand-600 hover:text-brand-700 font-medium">Forgot password?</button></div>
+          <div id="termsRow" class="hidden items-start gap-2"><input id="termsCheck" type="checkbox" class="mt-0.5 w-4 h-4" /><label for="termsCheck" class="text-[12px] text-slate-500 leading-relaxed">I agree to the <button type="button" class="open-terms text-brand-600 font-semibold">Terms</button> and <button type="button" class="open-privacy text-brand-600 font-semibold">Privacy</button>.</label></div>
+          <div id="referralNotice" class="hidden text-[12px] px-3 py-2 rounded-md bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200">You were referred by <strong id="referralNoticeName">a friend</strong> — you'll be linked to them automatically.</div>
+          <button id="authSubmit" type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold text-[14px] py-2.5 rounded-lg flex items-center justify-center gap-2"><span id="authSubmitText">Sign In</span><svg id="authSpinner" class="hidden spin" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg></button>
+        </form>
+        <div class="mt-5 flex items-center gap-3"><div class="flex-1 h-px bg-slate-200"></div><span class="text-[11.5px] font-medium text-slate-400 uppercase">or</span><div class="flex-1 h-px bg-slate-200"></div></div>
+        <button id="googleBtn" type="button" class="mt-4 w-full flex items-center justify-center gap-3 bg-white hover:bg-slate-50 text-slate-800 font-semibold text-[14px] py-2.5 rounded-lg ring-1 ring-slate-200"><svg width="17" height="17" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.2-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.1 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.1-11.3-7.6l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.5l6.2 5.2C36.9 40.1 44 35 44 24c0-1.2-.1-2.4-.4-3.5z"/></svg>Continue with Google</button>
+        <p class="mt-6 text-center text-[13px] text-slate-500"><span id="switchText">Don't have an account?</span> <button id="switchBtn" type="button" class="text-brand-600 hover:text-brand-700 font-semibold ml-1">Create one</button></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Terms + Privacy -->
+  <div id="termsModal" class="hidden fixed inset-0 z-[110] items-center justify-center p-4 modal-blur bg-slate-900/60">
+    <div class="relative w-full max-w-[720px] max-h-[90vh] overflow-y-auto modal-scroll bg-white rounded-2xl shadow-2xl fade-in">
+      <div class="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between z-10"><h2 class="text-[17px] font-extrabold text-slate-900">Terms of Service</h2><button class="close-legal w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center text-slate-400">✕</button></div>
+      <div class="p-6 prose-legal">
+        <p class="text-[12px] text-slate-400">Last updated: <span id="termsDate"></span></p>
+        <h3>1. Acceptance of Terms</h3><p>By using RX URL Shorter you agree to these Terms.</p>
+        <h3>2. Eligibility</h3><p>You must be at least 13 years old.</p>
+        <h3>3. Acceptable Use</h3><p>No malware, phishing, bot traffic, or incentive fraud.</p>
+        <h3>4. Earnings & Payouts</h3><ul><li>99% profit share model, 1% platform fee.</li><li>Rates are estimates, not fixed CPM.</li><li>Payouts on-demand above minimum.</li></ul>
+        <h3>5. Referral Program</h3><ul><li>10% lifetime commission.</li><li>Self-referrals prohibited.</li></ul>
+        <h3>6. Invalid Traffic</h3><p>Self-clicks, VPN, bots, and incentivized clicks are prohibited and result in forfeiture.</p>
+        <h3>7. Termination</h3><p>We may suspend accounts for abuse.</p>
+        <h3>8. Contact</h3><p>support@rxurlshorter.com</p>
+      </div>
+    </div>
+  </div>
+  <div id="privacyModal" class="hidden fixed inset-0 z-[110] items-center justify-center p-4 modal-blur bg-slate-900/60">
+    <div class="relative w-full max-w-[720px] max-h-[90vh] overflow-y-auto modal-scroll bg-white rounded-2xl shadow-2xl fade-in">
+      <div class="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between z-10"><h2 class="text-[17px] font-extrabold text-slate-900">Privacy Policy</h2><button class="close-legal w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center text-slate-400">✕</button></div>
+      <div class="p-6 prose-legal">
+        <p class="text-[12px] text-slate-400">Last updated: <span id="privacyDate"></span></p>
+        <h3>1. Data We Collect</h3><ul><li>Account data: name, email, hashed password.</li><li>Usage data: links, clicks, analytics.</li><li>Payment data: handled by third-party providers.</li></ul>
+        <h3>2. How We Use It</h3><p>To operate the service, calculate earnings, prevent fraud.</p>
+        <h3>3. Sharing</h3><p>We do not sell your data.</p>
+        <h3>4. Security</h3><p>Encryption in transit, hashed passwords.</p>
+        <h3>5. Contact</h3><p>privacy@rxurlshorter.com</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="copyToast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] bg-slate-900 text-white text-[13px] font-medium px-4 py-2.5 rounded-lg shadow-lg copy-toast">Copied</div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="/js/firebase-config.js"></script>
+  <script>
+    // ── Firebase init ──
+    firebase.initializeApp(window.firebaseConfig);
+    const auth = firebase.auth();
+    const googleProvider = new firebase.auth.GoogleAuthProvider();
+    googleProvider.setCustomParameters({ prompt: 'select_account' });
+
+    // ── Utilities ──
+    const $ = (id) => document.getElementById(id);
+    $('year').textContent = new Date().getFullYear();
+    const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    $('termsDate').textContent = today;
+    $('privacyDate').textContent = today;
+
+    // ── Referral capture ──
+    const urlRef = new URLSearchParams(location.search).get('ref');
+    if (urlRef) {
+      localStorage.setItem('rx_pending_referral', urlRef);
+    }
+
+    // ── Settings load ──
+    let publicSettings = null;
+    const COUNTRY_NAMES = {
+      us:'United States',gb:'United Kingdom',ca:'Canada',au:'Australia',de:'Germany',no:'Norway',se:'Sweden',ch:'Switzerland',nl:'Netherlands',dk:'Denmark',fi:'Finland',be:'Belgium',at:'Austria',nz:'New Zealand',
+      ae:'United Arab Emirates',sa:'Saudi Arabia',qa:'Qatar',kw:'Kuwait',fr:'France',it:'Italy',es:'Spain',pt:'Portugal',jp:'Japan',kr:'South Korea',sg:'Singapore',hk:'Hong Kong',ie:'Ireland',il:'Israel',pl:'Poland',cz:'Czech Republic',gr:'Greece',
+      in:'India',br:'Brazil',mx:'Mexico',id:'Indonesia',ph:'Philippines',vn:'Vietnam',pk:'Pakistan',bd:'Bangladesh',eg:'Egypt',ng:'Nigeria',za:'South Africa',ke:'Kenya',ma:'Morocco',tr:'Turkey',ar:'Argentina',co:'Colombia',cl:'Chile',pe:'Peru',th:'Thailand',my:'Malaysia',lk:'Sri Lanka',np:'Nepal'
+    };
+    const FLAGS = { us:'🇺🇸',gb:'🇬🇧',ca:'🇨🇦',au:'🇦🇺',de:'🇩🇪',no:'🇳🇴',se:'🇸🇪',ch:'🇨🇭',nl:'🇳🇱',dk:'🇩🇰',fi:'🇫🇮',be:'🇧🇪',at:'🇦🇹',nz:'🇳🇿',ae:'🇦🇪',sa:'🇸🇦',qa:'🇶🇦',kw:'🇰🇼',fr:'🇫🇷',it:'🇮🇹',es:'🇪🇸',pt:'🇵🇹',jp:'🇯🇵',kr:'🇰🇷',sg:'🇸🇬',hk:'🇭🇰',ie:'🇮🇪',il:'🇮🇱',pl:'🇵🇱',cz:'🇨🇿',gr:'🇬🇷',in:'🇮🇳',br:'🇧🇷',mx:'🇲🇽',id:'🇮🇩',ph:'🇵🇭',vn:'🇻🇳',pk:'🇵🇰',bd:'🇧🇩',eg:'🇪🇬',ng:'🇳🇬',za:'🇿🇦',ke:'🇰🇪',ma:'🇲🇦',tr:'🇹🇷',ar:'🇦🇷',co:'🇨🇴',cl:'🇨🇱',pe:'🇵🇪',th:'🇹🇭',my:'🇲🇾',lk:'🇱🇰',np:'🇳🇵' };
+
+    function microToDollars(m) { return (m || 0) / 1_000_000; }
+
+    function buildRateRows(settings) {
+      const countryRates = settings?.countryRates || {};
+      const rows = [];
+      for (const [cc, rate] of Object.entries(countryRates)) {
+        const tier = (rate.default || 0) >= 5_000_000 ? 1 : (rate.default || 0) >= 3_000_000 ? 2 : 3;
+        rows.push({ code: cc, country: COUNTRY_NAMES[cc] || cc.toUpperCase(), flag: FLAGS[cc] || '', tier, rateMicro: rate.default || 0 });
+      }
+      return rows.sort((a,b) => b.rateMicro - a.rateMicro);
+    }
+
+    async function loadSettings() {
+      try {
+        const res = await fetch('/api/public/settings');
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        publicSettings = data.settings;
+        if (!publicSettings) return renderSettingsFallback();
+        renderSettings();
+      } catch { renderSettingsFallback(); }
+    }
+
+    function renderSettingsFallback() {
+      $('heroRate').textContent = '$5';
+      $('statTier1').textContent = '$5.00';
+      $('tier1Rate').textContent = 'Unavailable';
+      $('tier2Rate').textContent = 'Unavailable';
+      $('tier3Rate').textContent = 'Unavailable';
+      $('defaultRate').textContent = 'Unavailable';
+      $('ratesTableBody').innerHTML = '<tr><td colspan="3" class="px-5 py-10 text-center text-[13px] text-slate-400">Live rates unavailable — try again later.</td></tr>';
+      $('estOutput').textContent = '$—';
+      updateRefCalc();
+    }
+
+    function renderSettings() {
+      const s = publicSettings;
+      const share = s.publisherSharePercent ?? 99;
+      const refPct = s.referralPercent ?? 10;
+      const flowRates = s.flowRates || {};
+      const maxFlow = Math.max(...Object.values(flowRates).filter(Boolean), 0);
+      const heroRate = maxFlow ? `$${microToDollars(maxFlow).toFixed(0)}` : '$5';
+
+      $('heroRate').textContent = heroRate;
+      $('statShare').textContent = share + '%';
+      $('statReferral').textContent = refPct + '%';
+      $('referralPctHero').textContent = refPct + '%';
+      $('referralPctFeature').textContent = refPct + '%';
+      $('referralPctSection').textContent = refPct + '%';
+      $('referralPctBody').textContent = refPct + '% of everything they ever make';
+      $('refCalcPct').textContent = refPct + '%';
+      $('profitShareBig').textContent = share + '%';
+      $('estShare').textContent = share + '%';
+
+      // Tier rates from country defaults
+      const rows = buildRateRows(s);
+      const tiers = { 1: 0, 2: 0, 3: 0 };
+      rows.forEach(r => { if (r.rateMicro > tiers[r.tier]) tiers[r.tier] = r.rateMicro; });
+      $('tier1Rate').textContent = tiers[1] ? `$${microToDollars(tiers[1]).toFixed(2)}` : '—';
+      $('tier2Rate').textContent = tiers[2] ? `$${microToDollars(tiers[2]).toFixed(2)}` : '—';
+      $('tier3Rate').textContent = tiers[3] ? `$${microToDollars(tiers[3]).toFixed(2)}` : '—';
+      $('statTier1').textContent = tiers[1] ? `$${microToDollars(tiers[1]).toFixed(2)}` : '—';
+      $('defaultRate').textContent = `$${microToDollars(s.defaultRateMicro).toFixed(2)}`;
+
+      // Country table
+      const tbody = $('ratesTableBody');
+      const search = ($('countrySearch').value || '').toLowerCase().trim();
+      const filtered = search ? rows.filter(r => r.country.toLowerCase().includes(search)) : rows;
+      if (!filtered.length) {
+        tbody.innerHTML = '';
+        $('noResults').classList.remove('hidden');
+      } else {
+        $('noResults').classList.add('hidden');
+        tbody.innerHTML = filtered.map(r => {
+          const badgeColor = r.tier === 1 ? 'bg-emerald-50 text-emerald-700 ring-emerald-200' : r.tier === 2 ? 'bg-blue-50 text-blue-700 ring-blue-200' : 'bg-amber-50 text-amber-700 ring-amber-200';
+          return `<tr class="hover:bg-slate-50"><td class="px-4 py-3 text-[13.5px] font-medium text-slate-800"><span class="mr-2">${r.flag}</span>${r.country}</td><td class="px-4 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-md text-[11.5px] font-semibold ring-1 ${badgeColor}">Tier ${r.tier}</span></td><td class="px-4 py-3 text-right"><span class="text-[14.5px] font-bold text-slate-900">$${microToDollars(r.rateMicro).toFixed(2)}</span><span class="text-[11.5px] text-slate-400 ml-1">/ 1k</span></td></tr>`;
+        }).join('');
+      }
+
+      updateEstimate();
+      updateRefCalc();
+    }
+
+    function updateEstimate() {
+      if (!publicSettings) return;
+      const clicks = Math.max(0, Number($('estClicks').value) || 0);
+      const tier = $('estTier').value;
+      const countryRates = publicSettings.countryRates || {};
+      const tiers = { tier1: 0, tier2: 0, tier3: 0, default: publicSettings.defaultRateMicro || 1_000_000 };
+      for (const rate of Object.values(countryRates)) {
+        const r = rate.default || 0;
+        if (r >= 5_000_000 && r > tiers.tier1) tiers.tier1 = r;
+        else if (r >= 3_000_000 && r >= 2_000_000 && r > tiers.tier2 && r < 5_000_000) tiers.tier2 = r;
+        else if (r >= 2_000_000 && r < 3_000_000 && r > tiers.tier3) tiers.tier3 = r;
+      }
+      const rateMicro = tiers[tier] || tiers.default;
+      const grossDollars = (clicks / 1000) * microToDollars(rateMicro);
+      const share = (publicSettings.publisherSharePercent ?? 99) / 100;
+      const net = grossDollars * share;
+      $('estOutput').textContent = '$' + net.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function updateRefCalc() {
+      const users = Math.max(0, Number($('refUsers').value) || 0);
+      const avg = Math.max(0, Number($('refAvg').value) || 0);
+      const pct = (publicSettings?.referralPercent ?? 10) / 100;
+      const monthly = users * avg * pct;
+      $('refOutput').textContent = '$' + monthly.toLocaleString(undefined, { maximumFractionDigits: 0 });
+      $('refLifetime').textContent = '$' + (monthly * 60).toLocaleString(undefined, { maximumFractionDigits: 0 });
+    }
+
+    $('estClicks').addEventListener('input', updateEstimate);
+    $('estTier').addEventListener('change', updateEstimate);
+    $('refUsers').addEventListener('input', updateRefCalc);
+    $('refAvg').addEventListener('input', updateRefCalc);
+    $('countrySearch').addEventListener('input', () => renderSettings());
+
+    loadSettings();
+
+    // ── Auth Modal ──
+    const modal = $('authModal');
+    let currentTab = 'signin';
+
+    function openModal(tab) {
+      modal.classList.remove('hidden'); modal.classList.add('flex');
+      document.body.classList.add('no-scroll');
+      setTab(tab || 'signin');
+      $('referralNotice').classList.toggle('hidden', !localStorage.getItem('rx_pending_referral'));
+      setTimeout(() => $('authEmail').focus(), 50);
+    }
+    function closeModal() {
+      modal.classList.add('hidden'); modal.classList.remove('flex');
+      document.body.classList.remove('no-scroll');
+      $('authAlert').classList.add('hidden');
+    }
+    function setTab(tab) {
+      currentTab = tab;
+      const isSignIn = tab === 'signin';
+      $('tabSignIn').className = 'auth-tab py-2 rounded-md text-[13.5px] font-semibold transition-all ' + (isSignIn ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800');
+      $('tabSignUp').className = 'auth-tab py-2 rounded-md text-[13.5px] font-semibold transition-all ' + (!isSignIn ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800');
+      $('nameField').classList.toggle('hidden', isSignIn);
+      $('forgotRow').classList.toggle('hidden', !isSignIn);
+      $('termsRow').classList.toggle('hidden', isSignIn);
+      $('termsRow').classList.toggle('flex', !isSignIn);
+      $('authTitle').textContent = isSignIn ? 'Welcome back' : 'Create your account';
+      $('authSubtitle').textContent = isSignIn ? 'Sign in to access your dashboard.' : 'Start earning in under a minute.';
+      $('authSubmitText').textContent = isSignIn ? 'Sign In' : 'Create Account';
+      $('switchText').textContent = isSignIn ? "Don't have an account?" : 'Already have an account?';
+      $('switchBtn').textContent = isSignIn ? 'Create one' : 'Sign In';
+      $('authAlert').classList.add('hidden');
+    }
+    function showAlert(type, msg) {
+      $('authAlert').className = 'mt-4 text-[13px] px-3.5 py-2.5 rounded-lg ' + (type === 'error' ? 'bg-red-50 text-red-700 ring-1 ring-red-200' : 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200');
+      $('authAlert').textContent = msg;
+    }
+    function setLoading(v) {
+      $('authSubmit').disabled = v;
+      $('authSpinner').classList.toggle('hidden', !v);
+      $('authSubmit').classList.toggle('opacity-70', v);
+    }
+    function friendlyError(code) {
+      const m = { 'auth/invalid-email':'Invalid email.','auth/user-disabled':'Account disabled.','auth/user-not-found':'No account found.','auth/wrong-password':'Wrong password.','auth/invalid-credential':'Wrong email or password.','auth/email-already-in-use':'Email already in use.','auth/weak-password':'Password must be 6+ chars.','auth/popup-closed-by-user':'Sign-in cancelled.','auth/too-many-requests':'Too many attempts. Try later.' };
+      return m[code] || 'Something went wrong.';
+    }
+
+    $('signInBtn').addEventListener('click', () => openModal('signin'));
+    $('ctaBtn').addEventListener('click', () => openModal('signup'));
+    $('heroCta').addEventListener('click', () => openModal('signup'));
+    $('dashboardBtn').addEventListener('click', () => openModal('signin'));
+    $('closeModal').addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+    $('tabSignIn').addEventListener('click', () => setTab('signin'));
+    $('tabSignUp').addEventListener('click', () => setTab('signup'));
+    $('switchBtn').addEventListener('click', () => setTab(currentTab === 'signin' ? 'signup' : 'signin'));
+    document.querySelectorAll('.open-signup').forEach(el => el.addEventListener('click', () => openModal('signup')));
+
+    $('togglePassword').addEventListener('click', () => {
+      const p = $('authPassword'); p.type = p.type === 'password' ? 'text' : 'password';
+    });
+
+    $('forgotBtn').addEventListener('click', async () => {
+      const email = $('authEmail').value.trim();
+      if (!email) return showAlert('error', 'Enter your email first.');
+      try { await auth.sendPasswordResetEmail(email); showAlert('success', 'Reset link sent.'); }
+      catch (err) { showAlert('error', friendlyError(err.code)); }
+    });
+
+    async function afterSignIn() {
+      const user = auth.currentUser;
+      if (!user) return;
+      try {
+        // Ensure profile exists
+        let res = await fetch('/api/auth/me', { headers: { Authorization: 'Bearer ' + await user.getIdToken() } });
+        if (res.status === 403) {
+          const referral = localStorage.getItem('rx_pending_referral');
+          const body = { name: user.displayName || '', referralCode: referral };
+          const initRes = await fetch('/api/auth/profile/init', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + await user.getIdToken() },
+            body: JSON.stringify(body)
+          });
+          if (!initRes.ok) throw new Error('Profile init failed');
+          localStorage.removeItem('rx_pending_referral');
+        } else if (!res.ok) {
+          throw new Error('Cannot fetch profile');
+        }
+        // Role check
+        const tok = await user.getIdTokenResult(true);
+        if (tok.claims.admin === true) window.location.href = '/admin.html';
+        else window.location.href = '/dashboard.html';
+      } catch (err) {
+        showAlert('error', 'Sign-in successful but profile setup failed. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    $('authForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      $('authAlert').classList.add('hidden');
+      const email = $('authEmail').value.trim();
+      const password = $('authPassword').value;
+      const name = $('authName').value.trim();
+
+      if (currentTab === 'signup' && !$('termsCheck').checked) return showAlert('error', 'Accept Terms to continue.');
+
+      setLoading(true);
+      try {
+        if (currentTab === 'signin') {
+          await auth.signInWithEmailAndPassword(email, password);
+        } else {
+          const cred = await auth.createUserWithEmailAndPassword(email, password);
+          if (name) await cred.user.updateProfile({ displayName: name });
+          await cred.user.sendEmailVerification().catch(() => {});
+        }
+        await afterSignIn();
+      } catch (err) {
+        showAlert('error', friendlyError(err.code));
+        setLoading(false);
+      }
+    });
+
+    $('googleBtn').addEventListener('click', async () => {
+      $('authAlert').classList.add('hidden');
+      if (currentTab === 'signup' && !$('termsCheck').checked) return showAlert('error', 'Accept Terms to continue.');
+      setLoading(true);
+      try {
+        await auth.signInWithPopup(googleProvider);
+        await afterSignIn();
+      } catch (err) {
+        showAlert('error', friendlyError(err.code));
+        setLoading(false);
+      }
+    });
+
+    // ── Auth state ──
+    auth.onAuthStateChanged(async (user) => {
+      const signedOut = !user;
+      $('signInBtn').classList.toggle('hidden', !signedOut);
+      $('dashboardBtn').classList.toggle('hidden', !signedOut);
+      $('userMenu').classList.toggle('hidden', signedOut);
+      $('userMenu').classList.toggle('flex', !signedOut);
+
+      if (user) {
+        const name = user.displayName || (user.email ? user.email.split('@')[0] : 'User');
+        $('userName').textContent = name;
+        $('userEmail').textContent = user.email || '';
+        if (user.photoURL) $('userAvatar').src = user.photoURL;
+        $('mobileUserBox').classList.remove('hidden');
+        $('mobileUserName').textContent = name;
+        $('mobileUserEmail').textContent = user.email || '';
+        $('mobileSignInBtn').classList.add('hidden');
+        $('mobileSignUpBtn').classList.add('hidden');
+        $('mobileSignOutBtn').classList.remove('hidden');
+        $('mobileSignOutBtn').classList.add('flex');
+
+        // Fetch real referral link
+        try {
+          const res = await fetch('/api/referrals/summary', { headers: { Authorization: 'Bearer ' + await user.getIdToken() } });
+          if (res.ok) {
+            const data = await res.json();
+            $('refLinkInput').value = data.referralLink;
+          }
+        } catch {}
+
+        const tok = await user.getIdTokenResult();
+        if (tok.claims.admin === true) {
+          $('dashLink').href = '/admin.html';
+          $('dashLink2').href = '/admin.html';
+        }
+      } else {
+        $('mobileUserBox').classList.add('hidden');
+        $('mobileSignInBtn').classList.remove('hidden');
+        $('mobileSignUpBtn').classList.remove('hidden');
+        $('mobileSignOutBtn').classList.add('hidden');
+        $('refLinkInput').value = 'Sign in to see your link';
+      }
+    });
+
+    $('userBtn').addEventListener('click', (e) => { e.stopPropagation(); $('userDropdown').classList.toggle('hidden'); });
+    document.addEventListener('click', () => $('userDropdown').classList.add('hidden'));
+
+    async function doSignOut() { await auth.signOut(); location.reload(); }
+    $('signOutBtn').addEventListener('click', doSignOut);
+    $('mobileSignOutBtn').addEventListener('click', doSignOut);
+
+    // ── Mobile menu ──
+    const mm = $('mobileMenu');
+    function openMM() {
+      mm.classList.remove('hidden');
+      document.body.classList.add('no-scroll');
+      $('hamburgerIcon').classList.add('hidden');
+      $('closeIcon').classList.remove('hidden');
+    }
+    function closeMM() {
+      $('mobileMenuPanel').classList.remove('slide-in');
+      $('mobileMenuPanel').classList.add('slide-out');
+      setTimeout(() => {
+        mm.classList.add('hidden');
+        document.body.classList.remove('no-scroll');
+        $('mobileMenuPanel').classList.remove('slide-out');
+        $('hamburgerIcon').classList.remove('hidden');
+        $('closeIcon').classList.add('hidden');
+      }, 180);
+    }
+    $('hamburgerBtn').addEventListener('click', () => mm.classList.contains('hidden') ? openMM() : closeMM());
+    mm.addEventListener('click', (e) => { if (e.target === mm) closeMM(); });
+    document.querySelectorAll('.mobile-link').forEach(a => a.addEventListener('click', closeMM));
+    $('mobileSignInBtn').addEventListener('click', () => { closeMM(); openModal('signin'); });
+    $('mobileSignUpBtn').addEventListener('click', () => { closeMM(); openModal('signup'); });
+
+    // ── Legal ──
+    const termsModal = $('termsModal'), privacyModal = $('privacyModal');
+    function openLegal(m) { m.classList.remove('hidden'); m.classList.add('flex'); document.body.classList.add('no-scroll'); }
+    function closeLegal(m) { m.classList.add('hidden'); m.classList.remove('flex'); document.body.classList.remove('no-scroll'); }
+    document.querySelectorAll('.open-terms').forEach(el => el.addEventListener('click', () => openLegal(termsModal)));
+    document.querySelectorAll('.open-privacy').forEach(el => el.addEventListener('click', () => openLegal(privacyModal)));
+    document.querySelectorAll('.close-legal').forEach(el => el.addEventListener('click', (e) => {
+      const p = e.target.closest('#termsModal, #privacyModal');
+      if (p) closeLegal(p);
+    }));
+    termsModal.addEventListener('click', (e) => { if (e.target === termsModal) closeLegal(termsModal); });
+    privacyModal.addEventListener('click', (e) => { if (e.target === privacyModal) closeLegal(privacyModal); });
+
+    // ── Copy referral (sample) ──
+    $('copyRefBtn').addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText($('refLinkInput').value);
+        const t = $('copyToast');
+        t.textContent = 'Referral link copied';
+        t.classList.remove('hidden');
+        setTimeout(() => t.classList.add('hidden'), 1800);
+      } catch {}
+    });
+
+    // ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (!modal.classList.contains('hidden')) closeModal();
+        if (!termsModal.classList.contains('hidden')) closeLegal(termsModal);
+        if (!privacyModal.classList.contains('hidden')) closeLegal(privacyModal);
+        if (!mm.classList.contains('hidden')) closeMM();
+      }
+    });
+  </script>
+</body>
+</html>

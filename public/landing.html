@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unlock Your Final Link - RX URL Shorter</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+    .spin{animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+    .pulse-btn { animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(37, 99, 235, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); } }
+    .pulse-btn-green { animation: pulse-green 2s infinite; }
+    @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); } 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); } }
+  </style>
+</head>
+<body class="text-slate-800 antialiased pb-20">
+
+  <!-- Header -->
+  <header class="bg-blue-600 text-white shadow-md relative z-50">
+    <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2 font-bold text-lg">
+        <span class="bg-white text-blue-600 px-2 py-0.5 rounded text-sm font-extrabold">RX</span>
+        RX URL Shorter
+      </div>
+      
+      <!-- 3-Line Hamburger Menu -->
+      <div class="relative">
+        <button id="menuBtn" class="inline-flex items-center justify-center w-10 h-10 rounded-md hover:bg-blue-700 transition-colors focus:outline-none">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+        
+        <!-- Dropdown Menu -->
+        <div id="dropdownMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5">
+          <a href="https://rxurlshortner.cc.cd" class="block px-4 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-100 transition-colors">🏠 Home Page</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto mt-6 px-4">
+    
+    <!-- Top Ad Slot (Optional) -->
+    <div class="w-full flex justify-center mb-6 min-h-[100px] overflow-hidden rounded-xl bg-slate-100 border border-dashed border-slate-300">
+      <div class="flex items-center justify-center text-slate-400 text-sm w-full p-4 text-center">
+        (Final Ad Space - Paste your ad code here)
+      </div>
+    </div>
+
+    <!-- SQUARE COURSE BANNER -->
+    <div class="flex flex-col items-center justify-center mb-6">
+      <p class="text-blue-600 font-bold tracking-widest uppercase text-sm mb-4 text-center">👇 Exclusive Course For You 👇</p>
+      
+      <!-- Container is set for Square banner (aspect-square) -->
+      <a href="#" id="courseBannerBtn" class="block w-full max-w-[320px] group relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all border-4 border-white ring-2 ring-blue-100 cursor-pointer">
+        <!-- APNI COURSE BANNER IMAGE KA LINK YAHAN DAALEIN -->
+        <img src="https://res.cloudinary.com/dgy7qwblb/image/upload/v1794243604/cource_xcjrvs.jpg" 
+             alt="Course Banner" 
+             class="w-full aspect-square object-cover group-hover:scale-105 transition-transform duration-300" />
+        
+        <!-- Overlay Effect for Click -->
+        <div class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors flex items-center justify-center">
+          <span class="bg-white text-blue-700 font-bold px-4 py-2 rounded-lg opacity-0 group-hover:opacity-100 transition-all shadow-lg transform translate-y-4 group-hover:translate-y-0">
+            Click to Join
+          </span>
+        </div>
+      </a>
+    </div>
+
+    <!-- ACTION BUTTONS (Get Link -> Timer -> Continue) -->
+    <!-- Padding/White Box hata diya gaya hai, ab ye clean button lagega -->
+    <div class="mb-8 text-center">
+      
+      <!-- Get Link Button -->
+      <button id="getLinkBtn" class="pulse-btn w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg px-12 py-4 rounded-xl shadow-lg transition-all">
+        🔓 Get Link
+      </button>
+
+      <!-- Timer Button (Hidden Initially) -->
+      <button id="timerBtn" class="hidden w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-200 text-slate-500 font-bold text-lg px-12 py-4 rounded-xl cursor-not-allowed">
+        <svg class="spin" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+        Please Wait <span id="countdown">20</span>s
+      </button>
+
+      <!-- Continue Button (Hidden Initially, links to actual destination) -->
+      <a id="continueBtn" href="#" class="hidden pulse-btn-green w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold text-lg px-12 py-4 rounded-xl shadow-lg shadow-green-500/30 transition-all">
+        Continue to Destination ➔
+      </a>
+      
+      <p class="text-xs text-slate-500 mt-4 font-medium" id="hintText">Click "Get Link" and wait for the timer to finish.</p>
+    </div>
+
+    <!-- Final Blog Content -->
+    <div class="prose prose-slate prose-lg max-w-none text-slate-600 bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-slate-100 mb-8">
+      <h3 class="text-xl font-bold text-slate-900 mb-2">Why Join This Course?</h3>
+      <p>Ye course un sabhi logo ke liye hai jo bina koi product beche, bina apna face dikhaye, aur bina kisi investment ke Instagram se paise kamana chahte hain.</p>
+      <ul class="list-disc pl-6 mb-6 space-y-2">
+        <li>Viral Reels kaise banayein bina camera ke.</li>
+        <li>0 followers se traffic kaise layein.</li>
+        <li>Us traffic ko high-paying clients me kaise convert karein.</li>
+      </ul>
+      <p class="font-semibold text-blue-600 mt-4">Agar aap ready hain, toh upar diye gaye button se apna link unlock karein!</p>
+    </div>
+
+  </main>
+
+  <!-- Logic for Timer and Redirection -->
+  <script>
+    // 1. Yahan Apne Course ka Link Daalein (Jahan banner click karne par jayega)
+    const MY_COURSE_LINK = "https://rxurlshortner.cc.cd"; 
+
+    // 2. URL se Destination URL nikalna (jo shortener me dala tha)
+    const urlParams = new URLSearchParams(location.search);
+    const destUrl = urlParams.get('url');
+
+    // Course Banner Setup
+    const courseBannerBtn = document.getElementById('courseBannerBtn');
+    courseBannerBtn.href = MY_COURSE_LINK;
+    courseBannerBtn.target = "_blank"; // Naye tab me khulega
+
+    // Continue Button Setup (Jahan user ko bhejna hai)
+    const continueBtn = document.getElementById('continueBtn');
+    if (destUrl) {
+      continueBtn.href = destUrl;
+    } else {
+      continueBtn.href = MY_COURSE_LINK; // Fallback agar url na mile
+    }
+
+    // Timer Logic
+    const getLinkBtn = document.getElementById('getLinkBtn');
+    const timerBtn = document.getElementById('timerBtn');
+    const countdownEl = document.getElementById('countdown');
+    const hintText = document.getElementById('hintText');
+
+    getLinkBtn.addEventListener('click', () => {
+      // Hide Get Link, Show Timer
+      getLinkBtn.classList.add('hidden');
+      timerBtn.classList.remove('hidden');
+      hintText.textContent = "Please wait while we unlock your link...";
+      
+      let timeLeft = 20;
+      countdownEl.textContent = timeLeft;
+      
+      const timer = setInterval(() => {
+        timeLeft--;
+        countdownEl.textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          // Hide Timer, Show Continue
+          timerBtn.classList.add('hidden');
+          continueBtn.classList.remove('hidden');
+          hintText.textContent = "Your link is unlocked! Click continue.";
+          hintText.classList.replace('text-slate-500', 'text-green-600');
+          hintText.classList.add('font-bold');
+        }
+      }, 1000);
+    });
+
+    // Hamburger Menu Logic
+    const menuBtn = document.getElementById('menuBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    menuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdownMenu.classList.toggle('hidden');
+    });
+
+    // Menu ke bahar click karne par menu band ho jaye
+    document.addEventListener('click', (e) => {
+      if (!menuBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+        dropdownMenu.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
