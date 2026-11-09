@@ -16,6 +16,14 @@
       "dest": "backend/server.js"
     },
     {
+      "src": "/(.*\\.(html|css|js|json|png|jpg|jpeg|svg|ico|txt))",
+      "dest": "public/$1"
+    },
+    {
+      "src": "/([A-Za-z0-9_-]{3,24})",
+      "dest": "backend/server.js"
+    },
+    {
       "src": "/(.*)",
       "dest": "public/$1"
     }
