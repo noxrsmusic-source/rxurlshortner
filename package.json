@@ -1,0 +1,24 @@
+{
+  "name": "rx-url-shorter",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node --watch backend/server.js",
+    "seed": "node firebase/seed-settings.js",
+    "bootstrap-admin": "node scripts/bootstrap-admin.js",
+    "test": "node --test backend/tests/"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "firebase-admin": "^12.4.0",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.4.0",
+    "zod": "^3.23.8",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5"
+  }
+}
